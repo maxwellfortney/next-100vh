@@ -1,6 +1,8 @@
 import Navbar from "../components/Navbar/Navbar";
 import AnimatedText from "../components/Home/AnimatedTexts";
 
+import styles from "../styles/Home/Home.module.css";
+
 export default function Home() {
     return (
         <div className="relative flex flex-col items-center justify-center w-full h-screen min-h-screen bg-100vh-gray">
@@ -24,39 +26,16 @@ export default function Home() {
                     </div>
                 </div>
             </div>
-            <svg
-                className="w-16 h-16 mb-2 animate-bounce"
-                fill="none"
-                viewBox="0 0 24 24"
-            >
-                <defs>
-                    <linearGradient
-                        id="linear"
-                        x1="0%"
-                        y1="0%"
-                        x2="100%"
-                        y2="0%"
-                    >
-                        <stop
-                            offset="0%"
-                            stopColor="#00FFFF"
-                            stopOpacity="1.0"
-                        />
-                        <stop
-                            offset="100%"
-                            stopColor="#8000FF"
-                            stopOpacity="1.0"
-                        />
-                    </linearGradient>
-                </defs>
-                <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    stroke="url(#linear)"
-                    d="M17 13l-5 5m0 0l-5-5m5 5V6"
-                />
-            </svg>
+            <div className="relative flex flex-col items-center justify-center mb-4 animate-bounce">
+                <p className="font-bold text-white">popular views</p>
+                <div
+                    className={`mt-2 bg-gradient-to-br from-100vh-cyan to-100vh-purple ${styles["mouseWrapper"]}`}
+                >
+                    <div
+                        className={`${styles["mouseIcon"]} m-1 bg-100vh-gray`}
+                    ></div>
+                </div>
+            </div>
         </div>
     );
 }

@@ -1,0 +1,36 @@
+.mouseWrapper {
+    border-radius: 25px;
+}
+
+.mouseIcon {
+    width: 36px;
+    height: 68px;
+    border-radius: 25px;
+}
+.mouseIcon:before {
+    position: absolute;
+    content: "";
+    width: 10px;
+    height: 10px;
+    background-image: linear-gradient(to bottom right, #00ffff, #8000ff);
+    margin-left: 14px;
+    margin-top: 14px;
+    border-radius: 6px;
+    animation: scroll 2s infinite;
+}
+
+@keyframes scroll {
+    0% {
+        opacity: 0;
+    }
+    20% {
+        opacity: 1;
+    }
+    80% {
+        opacity: 0;
+        transform: translateY(46px);
+    }
+    100% {
+        opacity: 0;
+    }
+}
