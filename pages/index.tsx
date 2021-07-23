@@ -24,6 +24,39 @@ export default function Home() {
                     </div>
                 </div>
             </div>
+            <svg
+                className="w-16 h-16 mb-2 animate-bounce"
+                fill="none"
+                viewBox="0 0 24 24"
+            >
+                <defs>
+                    <linearGradient
+                        id="linear"
+                        x1="0%"
+                        y1="0%"
+                        x2="100%"
+                        y2="0%"
+                    >
+                        <stop
+                            offset="0%"
+                            stopColor="#00FFFF"
+                            stopOpacity="1.0"
+                        />
+                        <stop
+                            offset="100%"
+                            stopColor="#8000FF"
+                            stopOpacity="1.0"
+                        />
+                    </linearGradient>
+                </defs>
+                <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    stroke="url(#linear)"
+                    d="M17 13l-5 5m0 0l-5-5m5 5V6"
+                />
+            </svg>
         </div>
     );
 }
