@@ -35,12 +35,12 @@ export default function Jobs() {
 
                     <div className="flex flex-1 ml-3 bg-gradient-to-br from-100vh-cyan to-100vh-purple">
                         <div className="flex flex-col flex-1 p-2 m-1 bg-100vh-gray">
-                            <p className="mb-1 text-2xl font-extrabold">
+                            <p className="mb-1 text-xl font-extrabold">
                                 search
                             </p>
                             <input type="text" className="py-1.5 bg-white " />
-                            <p className="text-2xl font-extrabold">title</p>
-                            <p className="mb-20 text-2xl font-extrabold">
+                            <p className="text-xl font-extrabold">title</p>
+                            <p className="mb-20 text-xl font-extrabold">
                                 location
                             </p>
                         </div>

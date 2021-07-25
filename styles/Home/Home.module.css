@@ -5,6 +5,8 @@
 .mouseIcon {
     width: 36px;
     height: 68px;
+    min-height: 68px;
+    min-width: 36px;
     border-radius: 25px;
 }
 .mouseIcon:before {
@@ -26,7 +28,7 @@
     20% {
         opacity: 1;
     }
-    80% {
+    90% {
         opacity: 0;
         transform: translateY(46px);
     }
