@@ -19,7 +19,7 @@ export default function ListingPreview({
             <div className="flex items-center justify-between w-full mb-auto text-white bg-gradient-to-br from-100vh-cyan to-100vh-purple">
                 <div className="flex justify-between w-full px-3 py-3 transition-colors duration-300 bg-100vh-gray hover:bg-transparent">
                     <div className="flex flex-col">
-                        <h2 className="mb-2 text-5xl font-extrabold">
+                        <h2 className="mb-2 text-4xl font-extrabold">
                             {title}
                         </h2>
                         <h2 className="text-xl">
@@ -29,7 +29,7 @@ export default function ListingPreview({
                     <div className="flex flex-col items-end justify-between">
                         <div className="flex items-center mb-4 ">
                             <svg
-                                className="w-8 mr-4 fill-current"
+                                className="w-6 mr-4 fill-current"
                                 x="0px"
                                 y="0px"
                                 viewBox="0 0 512 512"
@@ -42,7 +42,7 @@ export default function ListingPreview({
 			s85.333,38.281,85.333,85.333C341.333,217.719,303.052,256,256,256z"
                                 />
                             </svg>
-                            <h2 className="text-2xl font-bold ">{location}</h2>
+                            <h2 className="text-xl font-bold ">{location}</h2>
                         </div>
                         <h2 className="text-xl text-gray-400">{datePosted}</h2>
                     </div>

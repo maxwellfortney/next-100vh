@@ -1,11 +1,14 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SignUp from "../SignUp/SignUp";
 import Link from "next/link";
 import { CSSTransition } from "react-transition-group";
-import { useUser } from "@auth0/nextjs-auth0";
 import { useRouter } from "next/dist/client/router";
 
+import { signIn, signOut, useSession } from "next-auth/client";
+
 export default function Navbar() {
+    const [session, loading] = useSession();
+
     const router = useRouter();
     const { query, pathname } = router;
 
@@ -14,7 +17,9 @@ export default function Navbar() {
     const [isSignIn, setIsSignIn] = useState(false);
     const [isSignUp, setIsSignUp] = useState(false);
 
-    const { user, error, isLoading } = useUser();
+    useEffect(() => {
+        console.log(session);
+    }, [session]);
 
     function handleButtonClick({ type }: any) {
         if (!blurBg) {
@@ -56,7 +61,12 @@ export default function Navbar() {
                 classNames="fade"
                 unmountOnExit
             >
-                <SignUp blurBg={blurBg} setBlurBg={setBlurBg} />
+                <SignUp
+                    blurBg={blurBg}
+                    setBlurBg={setBlurBg}
+                    isSignIn={isSignIn}
+                    isSignUp={isSignUp}
+                />
             </CSSTransition>
             <div
                 className="z-10 flex items-center justify-between w-11/12 mt-10"
@@ -72,7 +82,7 @@ export default function Navbar() {
                         className="h-full mx-4 bg-white"
                         style={{ width: "3px" }}
                     />
-                    <div className="flex items-center h-full text-2xl font-extrabold text-white">
+                    <div className="flex items-center h-full text-xl font-extrabold text-white">
                         <Link href="/jobs">
                             <a
                                 className={`${
@@ -94,13 +104,13 @@ export default function Navbar() {
                         </Link>
                     </div>
                 </div>
-                <div className="flex items-center h-full text-2xl font-extrabold text-white">
+                <div className="flex items-center h-full text-xl font-extrabold text-white">
                     {/* <div className="flex mr-4">sign up</div>
                 <div className="flex items-center h-full px-4 transition-all hover:bg-100vh-gray hover:from-100vh-gray hover:to-100vh-gray bg-gradient-to-br from-100vh-cyan to-100vh-purple">
                     sign in
                 </div> */}
                     {/* <AnimatedButton label="sign up" /> */}
-                    {user ? (
+                    {session ? (
                         <>
                             <div className="relative flex mr-2 cursor-pointer group bg-gradient-to-br from-100vh-cyan to-100vh-purple">
                                 <div
@@ -112,12 +122,12 @@ export default function Navbar() {
                                         height: "calc(100% + 2px)",
                                     }}
                                 />
-                                <Link href={`/${user.nickname}`}>
+                                <Link href={`/${session.user?.name}`}>
                                     <a
                                         className={`flex justify-center w-full px-4 py-3 m-1 bg-100vh-gray`}
                                         style={{ zIndex: 1 }}
                                     >
-                                        {user.nickname}
+                                        {session.user?.email}
                                     </a>
                                 </Link>
                             </div>
@@ -129,36 +139,37 @@ export default function Navbar() {
                         </>
                     ) : (
                         <>
-                            <Link href="/api/auth/login">
-                                <a className="relative flex mr-2 cursor-pointer group bg-gradient-to-br from-100vh-cyan to-100vh-purple">
-                                    <div
-                                        className="absolute flex transition-all duration-200 opacity-100 bg-100vh-gray group-hover:opacity-0"
-                                        style={{
-                                            top: "-1px",
-                                            left: "-1px",
-                                            width: "calc(100% + 2px)",
-                                            height: "calc(100% + 2px)",
-                                        }}
-                                    />
-                                    <div
-                                        onClick={() =>
-                                            handleButtonClick("signUp")
-                                        }
-                                        className={`flex justify-center w-full px-5 py-3 m-1 bg-100vh-gray`}
-                                        style={{ zIndex: 1 }}
-                                    >
-                                        sign up
-                                    </div>
-                                </a>
-                            </Link>
-                            <Link href="/api/auth/login">
-                                <a
-                                    onClick={() => handleButtonClick("signIn")}
-                                    className="flex items-center justify-center h-full px-4 bg-gradient-to-br from-100vh-cyan to-100vh-purple"
+                            {/* <Link href="/api/auth/login"> */}
+                            <a className="relative flex mr-2 cursor-pointer group bg-gradient-to-br from-100vh-cyan to-100vh-purple">
+                                <div
+                                    className="absolute flex transition-all duration-200 opacity-100 bg-100vh-gray group-hover:opacity-0"
+                                    style={{
+                                        top: "-1px",
+                                        left: "-1px",
+                                        width: "calc(100% + 2px)",
+                                        height: "calc(100% + 2px)",
+                                    }}
+                                />
+                                <div
+                                    onClick={() => {
+                                        handleButtonClick("signUp");
+                                        // signIn();
+                                    }}
+                                    className={`flex justify-center w-full px-5 py-3 m-1 bg-100vh-gray`}
+                                    style={{ zIndex: 1 }}
                                 >
-                                    sign in
-                                </a>
-                            </Link>
+                                    sign up
+                                </div>
+                            </a>
+                            {/* </Link> */}
+                            {/* <Link href="/api/auth/login"> */}
+                            <a
+                                onClick={() => handleButtonClick("signIn")}
+                                className="flex items-center justify-center h-full px-4 bg-gradient-to-br from-100vh-cyan to-100vh-purple"
+                            >
+                                sign in
+                            </a>
+                            {/* </Link> */}
                         </>
                     )}
                 </div>
