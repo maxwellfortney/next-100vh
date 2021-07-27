@@ -5,6 +5,7 @@ import Link from "next/link";
 
 import styles from "../styles/Home/Home.module.css";
 import { useEffect } from "react";
+import Button from "../components/Button/Button";
 
 export default function Home() {
   return (
@@ -26,6 +27,9 @@ export default function Home() {
           <h1 className="w-11/12 mb-8 text-5xl font-black text-center md:mb-12 2xl:mb-20 lg:w-3/4 2xl:w-1/2 lg:text-7xl">
             The leading immersive design platform for developers and artists.
           </h1>
+
+          <Button>okay here's the button component</Button>
+
           <div className="flex text-xl">
             <div className="flex flex-1 mr-4 font-extrabold cursor-pointer group bg-gradient-to-br from-100vh-cyan to-100vh-purple">
               <Link href="/upload">
