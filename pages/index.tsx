@@ -4,8 +4,7 @@ import AnimatedText from "../components/Home/AnimatedTexts";
 import Link from "next/link";
 
 import styles from "../styles/Home/Home.module.css";
-import { useEffect } from "react";
-import Button from "../components/Button/Button";
+import Button100VH from "../components/UIKit/Buttons/Button100VH";
 
 export default function Home() {
   return (
@@ -28,23 +27,20 @@ export default function Home() {
             The leading immersive design platform for developers and artists.
           </h1>
 
-          <Button>okay here's the button component</Button>
-
           <div className="flex text-xl">
-            <div className="flex flex-1 mr-4 font-extrabold cursor-pointer group bg-gradient-to-br from-100vh-cyan to-100vh-purple">
-              <Link href="/upload">
-                <a className="flex justify-center w-full px-5 py-3 m-1 transition-colors duration-300 bg-100vh-gray hover:bg-transparent">
-                  upload
-                </a>
-              </Link>
-            </div>
-            <div className="flex flex-1 font-extrabold cursor-pointer bg-gradient-to-br from-100vh-cyan to-100vh-purple">
-              <Link href="/inspiration">
-                <a className="flex justify-center w-full px-5 py-3 m-1 transition-colors duration-300 bg-100vh-gray hover:bg-transparent">
-                  browse
-                </a>
-              </Link>
-            </div>
+            <Button100VH
+              styleType={2}
+              label="upload"
+              isLink={true}
+              href="/upload"
+              className="mr-2"
+            />
+            <Button100VH
+              styleType={2}
+              label="browse"
+              isLink={true}
+              href="/inspiration"
+            />
           </div>
         </div>
         <div className="relative flex flex-col items-center justify-center mb-4 animate-bounce">

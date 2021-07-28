@@ -6,6 +6,7 @@ import { CSSTransition } from "react-transition-group";
 import { useRouter } from "next/dist/client/router";
 
 import { signIn, signOut, useSession } from "next-auth/client";
+import Button100VH from "../UIKit/Buttons/Button100VH";
 
 export default function Navbar() {
   const [session, loading] = useSession();
@@ -169,64 +170,34 @@ export default function Navbar() {
           {/* <AnimatedButton label="sign up" /> */}
           {session ? (
             <>
-              <div className="relative flex mr-2 cursor-pointer group bg-gradient-to-br from-100vh-cyan to-100vh-purple">
-                <div
-                  className="absolute flex transition-all duration-200 opacity-100 bg-100vh-gray group-hover:opacity-0"
-                  style={{
-                    top: "-1px",
-                    left: "-1px",
-                    width: "calc(100% + 2px)",
-                    height: "calc(100% + 2px)",
-                  }}
-                />
-                <Link href={`/${session.user?.name}`}>
-                  <a
-                    className={`flex justify-center w-full px-4 py-3 m-1 bg-100vh-gray`}
-                    style={{ zIndex: 1 }}
-                  >
-                    {session.user?.email}
-                  </a>
-                </Link>
-              </div>
-              <Link href="/upload">
-                <a className="flex items-center justify-center h-full px-4 bg-gradient-to-br from-100vh-cyan to-100vh-purple">
-                  upload
-                </a>
-              </Link>
+              <Button100VH
+                styleType={1}
+                label={session.user?.email as string}
+                isLink={true}
+                href={session.user?.name as string}
+              />
+              <Button100VH
+                styleType={3}
+                label="upload"
+                isLink={true}
+                href="/upload"
+                className="ml-2"
+              />
             </>
           ) : (
             <>
-              {/* <Link href="/api/auth/login"> */}
-              <a className="relative flex mr-2 cursor-pointer group bg-gradient-to-br from-100vh-cyan to-100vh-purple">
-                <div
-                  className="absolute flex transition-all duration-200 opacity-100 bg-100vh-gray group-hover:opacity-0"
-                  style={{
-                    top: "-1px",
-                    left: "-1px",
-                    width: "calc(100% + 2px)",
-                    height: "calc(100% + 2px)",
-                  }}
-                />
-                <div
-                  onClick={() => {
-                    handleButtonClick("signUp");
-                    // signIn();
-                  }}
-                  className={`flex justify-center w-full px-5 py-3 m-1 bg-100vh-gray`}
-                  style={{ zIndex: 1 }}
-                >
-                  sign up
-                </div>
-              </a>
-              {/* </Link> */}
-              {/* <Link href="/api/auth/login"> */}
-              <a
+              <Button100VH
+                styleType={1}
+                label="sign up"
+                onClick={() => handleButtonClick("signUp")}
+                className="mr-2"
+              />
+
+              <Button100VH
+                styleType={3}
+                label="sign in"
                 onClick={() => handleButtonClick("signIn")}
-                className="flex items-center justify-center h-full px-4 bg-gradient-to-br from-100vh-cyan to-100vh-purple"
-              >
-                sign in
-              </a>
-              {/* </Link> */}
+              />
             </>
           )}
         </div>

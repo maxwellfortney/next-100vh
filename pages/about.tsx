@@ -1,5 +1,4 @@
 import Navbar from "../components/Navbar/Navbar";
-import Button from "../components/Button/Button";
 
 export default function About() {
   return (

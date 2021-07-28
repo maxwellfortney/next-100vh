@@ -4,7 +4,7 @@ export default function AnimatedTexts() {
   //         /*100 view height, all the time.*/
   //    }
   return (
-    <div className="absolute top-0 left-0 w-full h-full md:text-lg xl:text-xl">
+    <div className="absolute top-0 left-0 w-full h-full md:text-lg xl:text-xl opacity-70">
       <div
         className="absolute flex flex-col font-extrabold text-gray-400 animate-bounce-rLeft"
         style={{ top: "20%", left: "13%" }}

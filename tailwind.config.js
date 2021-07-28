@@ -18,8 +18,13 @@ module.exports = {
           "0%, 100%": { transform: "translate(0,  0px) rotate(20deg)" },
           "50%": { transform: "translate(0, 15px) rotate(20deg)" },
         },
+        fadeAndRise: {
+          "0%": { opacity: 0, transform: "translateY(15px)" },
+          "100%": { opacity: 1, transform: "translateY(0px)" },
+        },
       },
       animation: {
+        fadeAndRise: "fadeAndRise 1.2s cubic-bezier(0.645, 0.045, 0.355, 1)",
         "bounce-rLeft": "bounce-rLeft 3s linear infinite",
         "bounce-rRight": "bounce-rRight 3s linear infinite",
       },
