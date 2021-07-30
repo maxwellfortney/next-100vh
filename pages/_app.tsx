@@ -1,6 +1,6 @@
 import "../styles/globals.css";
 import type { AppProps } from "next/app";
-import { Provider } from "next-auth/client";
+import { Provider, useSession } from "next-auth/client";
 
 function MyApp({ Component, pageProps }: AppProps) {
     return (
@@ -9,4 +9,5 @@ function MyApp({ Component, pageProps }: AppProps) {
         </Provider>
     );
 }
+
 export default MyApp;

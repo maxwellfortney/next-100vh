@@ -60,7 +60,7 @@ export default function SignUp({ blurBg, setBlurBg, isSignIn, isSignUp }: any) {
                     >
                         <FaFacebook className="mr-2 text-3xl" />
                         <p>Facebook</p>
-                    </button>{" "}
+                    </button>
                 </div>
             </div>
         </div>
