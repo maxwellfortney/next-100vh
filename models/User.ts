@@ -1,3 +1,5 @@
+import mongoose from "mongoose";
+
 import Adapters, { TypeORMUserModel } from "next-auth/adapters";
 import { EntitySchemaColumnOptions } from "typeorm";
 
@@ -10,6 +12,7 @@ export default class User extends (<any>Adapters.TypeORM.Models.User.model) {
     ) {
         super(name, email, image, emailVerified);
         this.username = null;
+        this.projectLikes = [];
     }
 }
 
@@ -22,6 +25,7 @@ type UserSchema = {
         email?: EntitySchemaColumnOptions;
         image?: EntitySchemaColumnOptions;
         emailVerified?: EntitySchemaColumnOptions;
+        projectLikes: EntitySchemaColumnOptions;
     };
 };
 
@@ -35,5 +39,43 @@ export const UserSchema: UserSchema = {
             nullable: true,
             unique: true,
         },
+        projectLikes: {
+            type: "array",
+            array: true,
+        },
     },
 };
+
+// const mongooseUserSchema = new mongoose.Schema({
+//     name: String,
+//     email: {
+//         type: String,
+//         unique: true,
+//     },
+//     image: String,
+//     username: {
+//         type: String,
+//         unique: true,
+//     },
+//     createdAt: Date,
+//     updatedAt: Date,
+//     projectLikes: {
+//         type: [Object],
+//     },
+// });
+
+// export const mongooseUserModel = mongoose.model("users", mongooseUserSchema);
+
+export const mongooseUserSchema = new mongoose.Schema({
+    username: String,
+    name: String,
+    email: String,
+    image: String,
+    emailVerified: Date,
+    projectLikes: {
+        type: [Object],
+    },
+});
+
+export const mongooseUserModel =
+    mongoose.models.users || mongoose.model("users", mongooseUserSchema);

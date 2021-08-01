@@ -1,6 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "next-auth/client";
-import { connectToDatabase } from "../../../../lib/mongodb";
+
+import dbConnect from "../../../../lib/mongodb";
+import { mongooseUserModel } from "../../../../models/User";
 
 export default async function handler(
     req: NextApiRequest,
@@ -13,19 +15,34 @@ export default async function handler(
     if (session) {
         console.log(session);
 
-        const { db } = await connectToDatabase();
-        const collection = db.collection("users");
+        // const { db } =
+        // const collection = db.collection("users");
 
-        const updateResult = await collection.updateOne(
+        // const updateResult = await collection.updateOne(
+        //     { email: session.user?.email },
+        //     { $set: { username: newUsername } }
+        // );
+        // console.log(updateResult);
+
+        await dbConnect();
+
+        await mongooseUserModel.findOneAndUpdate(
             { email: session.user?.email },
-            { $set: { username: newUsername } }
+            { username: newUsername },
+            {},
+            (err, doc, res2) => {
+                if (err) {
+                    res.status(400);
+                } else {
+                    res.redirect(200, "/");
+                }
+            }
         );
-        console.log(updateResult);
 
-        res.redirect(200, "/");
+        // res.redirect(200, "/");
     } else {
         res.status(401);
     }
 
-    res.end();
+    // res.end();
 }

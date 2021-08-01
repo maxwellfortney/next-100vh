@@ -1,5 +1,8 @@
+import mongoose from "mongoose";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { connectToDatabase } from "../../../lib/mongodb";
+import dbConnect from "../../../lib/mongodb";
+import Models from "../../../models";
+import { mongooseUserModel } from "../../../models/User";
 
 export default async function handler(
     req: NextApiRequest,
@@ -7,11 +10,20 @@ export default async function handler(
 ) {
     const { username } = req.query;
 
-    const { db } = await connectToDatabase();
-    const collection = db.collection("users");
+    await dbConnect();
 
-    const filteredDocs = await collection.find({ username }).toArray();
+    let status = 404;
 
-    console.log(filteredDocs);
-    res.status(200).json({ isAvailable: filteredDocs.length === 0 });
+    console.log(mongoose);
+
+    console.log(Models.User.model);
+
+    await mongooseUserModel.findOne({ username }, function (err, user) {
+        if (err) {
+            status = 404;
+        } else {
+            status = 200;
+            res.status(status).json({ isAvailable: user == null });
+        }
+    });
 }

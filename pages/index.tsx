@@ -8,44 +8,6 @@ import Button100VH from "../components/UIKit/Buttons/Button100VH";
 import { useEffect } from "react";
 
 export default function Home() {
-    // const getGeneratedPageURL = ({ html, css, js }) => {
-    //     const getBlobURL = (code, type) => {
-    //         const blob = new Blob([code], { type });
-    //         return URL.createObjectURL(blob);
-    //     };
-
-    //     const cssURL = getBlobURL(css, "text/css");
-    //     const jsURL = getBlobURL(js, "text/javascript");
-
-    //     const source = `
-    //       <html>
-    //         <head>
-    //           ${
-    //               css &&
-    //               `<link rel="stylesheet" type="text/css" href="${cssURL}" />`
-    //           }
-    //           ${js && `<script src="${jsURL}"></script>`}
-    //         </head>
-    //         <body>
-    //           ${html || ""}
-    //         </body>
-    //       </html>
-    //     `;
-
-    //     return getBlobURL(source, "text/html");
-    // };
-
-    // useEffect(() => {
-    //     const url = getGeneratedPageURL({
-    //         html: "<p className=`font-black`>Hello, world!</p>",
-    //         css: "p { color: blue; }",
-    //         js: 'console.log("hi")',
-    //     });
-
-    //     const iframe = document.querySelector("#iframe");
-    //     (iframe as any).src = url;
-    // }, []);
-
     return (
         <div
             id="main-container"
@@ -98,7 +60,32 @@ export default function Home() {
                 style={{ scrollSnapAlign: "start" }}
                 className="flex w-full h-screen min-h-screen bg-red-400"
             >
-                a
+                <div
+                    id="testDiv"
+                    className="flex flex-col items-center justify-start w-full h-full text-white bg-gradient-to-r from-pink-300 via-purple-300 to-indigo-400"
+                >
+                    <div className="flex justify-between w-11/12 mt-3">
+                        <div className="flex items-center">
+                            <h1 className="text-5xl font-black">Test Page</h1>
+                        </div>
+                        <div className="flex items-center text-xl font-medium">
+                            <a className="py-4 mr-2 transition-all border-b-2 border-transparent cursor-pointer hover:border-white">
+                                Home
+                            </a>
+                            <a className="py-4 mr-2 transition-all border-b-2 border-transparent cursor-pointer hover:border-white">
+                                About
+                            </a>
+                            <a className="py-4 transition-all border-b-2 border-transparent cursor-pointer hover:border-white">
+                                Contact
+                            </a>
+                        </div>
+                    </div>
+                    <div className="flex items-center justify-center flex-1">
+                        <h1 className="text-5xl font-black text-center text-white md:text-6xl lg:text-7xl">
+                            The best test page you have ever seen.
+                        </h1>
+                    </div>
+                </div>
             </div>
             <div
                 style={{ scrollSnapAlign: "start" }}

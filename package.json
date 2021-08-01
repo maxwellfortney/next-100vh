@@ -13,6 +13,7 @@
     "github-api": "^3.4.0",
     "javascript-time-ago": "^2.3.8",
     "mongodb": "^3.6.0",
+    "mongoose": "^5.13.5",
     "next": "11.0.1",
     "next-auth": "^3.27.3",
     "react": "17.0.2",
