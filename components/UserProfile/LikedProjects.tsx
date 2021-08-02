@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import AProject from "./AProject";
 import type { AProjectType } from "./AProject";
 
-export default function Projects() {
+export default function LikedProjects() {
   const router = useRouter();
   const { username } = router.query;
 
@@ -13,10 +13,9 @@ export default function Projects() {
   async function getProjects() {
     const res = await fetch("/api/projects/getProjects/" + username);
 
-    const projects = await res.json();
-    console.log(projects);
-
-    if (res.status === 200 && projects) {
+    if (res.status === 200) {
+      const projects = await res.json();
+      console.log(projects);
       setProjects(projects);
     }
   }
@@ -55,6 +54,10 @@ export default function Projects() {
           })}
         </>
       ) : null}
+      {/* <div className="flex bg-red-400 h-80">a</div>
+            <div className="flex bg-red-400 h-80">a</div>
+            <div className="flex bg-red-400 h-80">a</div>
+            <div className="flex bg-red-400 h-80">a</div> */}
     </div>
   );
 }

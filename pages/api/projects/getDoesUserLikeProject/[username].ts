@@ -1,33 +1,43 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import dbConnect from "../../../../lib/mongodb";
+import dbConnect from "../../../../utils/mongodb";
 import { mongooseUserModel } from "../../../../models/User";
+import { getUserByUsername } from "../../../../utils/server/user";
 
 export default async function handler(
-    req: NextApiRequest,
-    res: NextApiResponse<any>
+  req: NextApiRequest,
+  res: NextApiResponse<any>
 ) {
-    const { username, projectId } = req.query;
+  const { username, projectId } = req.query;
 
-    await dbConnect();
-    const filteredDocs = await mongooseUserModel.findOne({ username }).exec();
+  if (!username && !projectId) {
+    res.status(400).send("Bad request: missing parameters: username projectId");
+    return;
+  } else if (!username && projectId) {
+    res.status(400).send("Bad request: missing parameters: username");
+    return;
+  } else if (username && !projectId) {
+    res.status(400).send("Bad request: missing parameters: projectId");
+    return;
+  }
 
-    if (filteredDocs) {
-        let userDidLike = false;
+  await dbConnect();
+  const user = await getUserByUsername(username as string);
 
-        filteredDocs.projectLikes.forEach((like) => {
-            if (like.projectId == projectId) {
-                userDidLike = true;
-                console.log(userDidLike);
+  if (user) {
+    let userDidLike = false;
 
-                res.status(200).end(JSON.stringify(userDidLike));
-            }
-        });
-        if (!userDidLike) {
-            console.log(userDidLike);
-            res.status(200);
-            res.end(JSON.stringify(userDidLike));
-        }
+    user.projectLikes.forEach((like) => {
+      if (like.projectId == projectId) {
+        userDidLike = true;
+        console.log("userDidLike", userDidLike);
+
+        res.status(200).json(JSON.stringify(userDidLike));
+      }
+    });
+
+    if (!userDidLike) {
+      console.log("userDidLike", userDidLike);
+      res.status(200).json(JSON.stringify(userDidLike));
     }
-
-    // res.end();
+  }
 }

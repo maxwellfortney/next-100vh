@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
+
 import dbConnect from "../../../../utils/mongodb";
-import { mongooseProjectModel } from "../../../../models/Project";
+import { mongooseUserModel } from "../../../../models/User";
 
 export default async function handler(
   req: NextApiRequest,
@@ -13,14 +14,13 @@ export default async function handler(
     return;
   }
 
-  const projects = await mongooseProjectModel
-    .find({ ownerUsername: username })
-    .exec();
+  await dbConnect();
 
-  if (projects) {
-    res.status(200).json(JSON.stringify(projects));
-    return;
+  const user = await mongooseUserModel.findOne({ username }).exec();
+
+  if (user) {
+    res.status(200).json(user);
   } else {
-    res.status(400).send("Bad request: unknown error fetching from database");
+    res.status(404).end();
   }
 }
