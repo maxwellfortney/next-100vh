@@ -14,7 +14,7 @@ export default function ProfileImage({ image }) {
 
   return (
     <div
-      className="flex items-center justify-center overflow-hidden rounded-full w-44 h-44"
+      className="flex items-center justify-center w-40 h-40 overflow-hidden rounded-full lg:w-48 lg:h-48"
       style={{ backgroundColor: "#282828" }}
     >
       <img id="ProfilePhoto" />
