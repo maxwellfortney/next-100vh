@@ -23,7 +23,7 @@ export default function Settings() {
     }, [scrollHeight]);
 
     return (
-      <div className="relative flex w-0.5 h-full pb-2">
+      <div className="relative flex h-full pb-2" style={{ width: "3px" }}>
         <div className="w-full h-full bg-gradient-to-br from-100vh-cyan to-100vh-purple" />
         <div
           className="absolute bottom-0 flex w-full transition-all bg-100vh-gray"
@@ -32,6 +32,7 @@ export default function Settings() {
       </div>
     );
   }
+
   return (
     <div
       className="flex flex-col items-center justify-center w-full max-h-screen min-h-screen bg-100vh-gray"
@@ -56,7 +57,10 @@ export default function Settings() {
           style={{ maxWidth: "300px" }}
         >
           <h1 className="self-start text-4xl font-bold">settings</h1>
-          <div className="my-4 w-full h-0.5 bg-gradient-to-br from-100vh-cyan to-100vh-purple" />
+          <div
+            className="w-full my-4 bg-gradient-to-br from-100vh-cyan to-100vh-purple"
+            style={{ height: "3px" }}
+          />
           <div className="flex w-full">
             <ScrollBar scrollPercent={scrollPercent} />
             <div className="flex flex-col items-start justify-start w-full ml-3 text-xl font-medium">

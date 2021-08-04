@@ -1,3 +1,5 @@
+const colors = require("tailwindcss/colors");
+
 module.exports = {
   purge: ["./pages/**/*.{js,ts,jsx,tsx}", "./components/**/*.{js,ts,jsx,tsx}"],
   darkMode: false, // or 'media' or 'class'
@@ -8,6 +10,8 @@ module.exports = {
         "100vh-blue": "#0085FF",
         "100vh-purple": "#8000FF",
         "100vh-gray": "#131313",
+        rose: colors.rose,
+        fuchsia: colors.fuchsia,
       },
       keyframes: {
         "bounce-rLeft": {
