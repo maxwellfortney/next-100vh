@@ -65,40 +65,8 @@ export default function Navbar() {
         });
     }, []);
 
-    function handleButtonClick({ type }: any) {
-        if (!blurBg) {
-            setBlurBg(true);
-            if ((type = "signIn")) {
-                setIsSignIn(true);
-                setIsSignUp(false);
-            } else if (type === "signUp") {
-                setIsSignIn(false);
-                setIsSignUp(true);
-            }
-        } else if (isSignIn) {
-            setIsSignIn(false);
-            setIsSignUp(true);
-        } else if (isSignUp) {
-            setIsSignIn(true);
-            setIsSignUp(false);
-        } else {
-            setBlurBg(false);
-            setIsSignIn(false);
-            setIsSignUp(false);
-        }
-    }
-
     return (
         <>
-            {/* {blurBg ? (
-
-                <div
-                    onClick={() => setBlurBg(false)}
-                    className="fixed top-0 left-0 z-20 w-screen h-screen bg-black opacity-80"
-                >
-                    <div className="flex"></div>
-                </div>
-            ) : null} */}
             <MobileMenu menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
             <CSSTransition
                 in={blurBg}
@@ -178,19 +146,9 @@ export default function Navbar() {
                     </button>
                 </div>
                 <div className="items-start hidden h-full text-xl font-extrabold text-white md:flex">
-                    {/* <div className="flex mr-4">sign up</div>
-                <div className="flex items-center h-full px-4 transition-all hover:bg-100vh-gray hover:from-100vh-gray hover:to-100vh-gray bg-gradient-to-br from-100vh-cyan to-100vh-purple">
-                    sign in
-                </div> */}
                     {session ? (
                         <>
                             <DropdownToggle session={session} />
-                            {/* <Button100VH
-                                styleType={1}
-                                label={
-                                    (session?.user as any)?.username as string
-                                }
-                            /> */}
                             <Button100VH
                                 styleType={3}
                                 label="upload"

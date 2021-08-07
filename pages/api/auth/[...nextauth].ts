@@ -112,27 +112,30 @@ export default NextAuth({
     callbacks: {
         // async signIn(user, account, profile) { return true },
         // async redirect(url, baseUrl) { return baseUrl },
-        async session(session, user) {
-            // console.log("4", user);
+        async session(session, token) {
+            // console.log("4", token);
             // console.log("5", session);
 
-            (session.user as any).username =
-                user.username || (session.user as any).username;
-            (session.user as any).projectLikes =
-                user.projectLikes || (session.user as any).projectLikes;
-            (session.user as any).following =
-                user.following || (session.user as any).following;
-            (session.user as any).followers =
-                user.followers || (session.user as any).followers;
-            (session.user as any).bio = user.bio || (session.user as any).bio;
-            (session.user as any).skills =
-                user.skills || (session.user as any).skills;
-            (session.user as any).createdAt =
-                user.createdAt || (session.user as any).createdAt;
-            (session.user as any).image =
-                user.image || (session.user as any).image;
-            (session.user as any).isVerified =
-                user.isVerified || (session.user as any).isVerified;
+            // (session.user as any).username =
+            //     user.username || (session.user as any).username;
+            // (session.user as any).projectLikes =
+            //     user.projectLikes || (session.user as any).projectLikes;
+            // (session.user as any).following =
+            //     user.following || (session.user as any).following;
+            // (session.user as any).followers =
+            //     user.followers || (session.user as any).followers;
+            // (session.user as any).bio = user.bio || (session.user as any).bio;
+            // (session.user as any).skills =
+            //     user.skills || (session.user as any).skills;
+            // (session.user as any).createdAt =
+            //     user.createdAt || (session.user as any).createdAt;
+            // (session.user as any).image =
+            //     user.image || (session.user as any).image;
+            // (session.user as any).isVerified =
+            //     user.isVerified || (session.user as any).isVerified;
+            if (token.user) {
+                session.user = token.user as any;
+            }
             return session;
         },
         async jwt(token, user, account, profile, isNewUser) {
@@ -152,18 +155,7 @@ export default NextAuth({
                 if (res.status === 200) {
                     const resJson = await res.json();
 
-                    token.name = resJson.name;
-                    token.email = resJson.email;
-                    token.picture = resJson.picture;
-                    token.username = resJson.username;
-                    token.projectLikes = resJson.projectLikes;
-                    token.following = resJson.following;
-                    token.followers = resJson.followers;
-                    token.bio = resJson.bio;
-                    token.skills = resJson.skills;
-                    token.createdAt = resJson.createdAt;
-                    token.image = resJson.image;
-                    token.isVerified = resJson.isVerified;
+                    token.user = resJson;
                 }
             }
 
@@ -171,6 +163,9 @@ export default NextAuth({
             //   token.projectLikes =
             //     token.projectLikes || (user as any).projectLikes || null;
 
+            // if (typeof user !== typeof undefined) {
+            //     token.user = user;
+            // }
             return token;
         },
     },
@@ -190,7 +185,7 @@ export default NextAuth({
             Account: Adapters.TypeORM.Models.Account,
             Session: Adapters.TypeORM.Models.Session,
             VerificationRequest: Adapters.TypeORM.Models.VerificationRequest,
-            User: Models.User,
+            User: Models.User as any,
         },
     }),
 });

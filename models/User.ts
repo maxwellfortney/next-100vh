@@ -1,7 +1,5 @@
 import mongoose from "mongoose";
-
-import Adapters, { TypeORMUserModel } from "next-auth/adapters";
-import { EntitySchemaColumnOptions } from "typeorm";
+import Adapters from "next-auth/adapters";
 
 export default class User extends (<any>Adapters.TypeORM.Models.User.model) {
     constructor(
@@ -17,69 +15,45 @@ export default class User extends (<any>Adapters.TypeORM.Models.User.model) {
         this.following = [];
         this.bio = null;
         this.skills = [];
-        this.createdAt = null;
-        this.image = "";
+        // this.createdAt = null;
+        // this.image = "";
         this.isVerified = false;
     }
 }
 
-type UserSchema = {
-    name: string;
-    target: typeof TypeORMUserModel;
-    columns: {
-        username?: EntitySchemaColumnOptions;
-        name?: EntitySchemaColumnOptions;
-        email?: EntitySchemaColumnOptions;
-        image?: EntitySchemaColumnOptions;
-        emailVerified?: EntitySchemaColumnOptions;
-        projectLikes: EntitySchemaColumnOptions;
-        followers: EntitySchemaColumnOptions;
-        following: EntitySchemaColumnOptions;
-        bio?: EntitySchemaColumnOptions;
-        skills?: EntitySchemaColumnOptions;
-        createdAt?: EntitySchemaColumnOptions;
-        isVerified: EntitySchemaColumnOptions;
-    };
-};
-
-export const UserSchema: UserSchema = {
+export const UserSchema = {
     name: "User",
     target: User,
     columns: {
         ...Adapters.TypeORM.Models.User.schema.columns,
         username: {
             type: "varchar",
-            nullable: true,
+            default: null,
             unique: true,
         },
         projectLikes: {
             type: "array",
-            array: true,
             default: [],
+            array: true,
         },
         followers: {
             type: "array",
-            array: true,
             default: [],
+            array: true,
         },
         following: {
             type: "array",
-            array: true,
             default: [],
+            array: true,
         },
         bio: {
             type: "varchar",
-            nullable: true,
+            default: null,
         },
         skills: {
             type: "array",
+            default: [],
             array: true,
-        },
-        createdAt: {
-            type: "date",
-        },
-        image: {
-            type: "varchar",
         },
         isVerified: {
             type: "boolean",
@@ -88,22 +62,56 @@ export const UserSchema: UserSchema = {
     },
 };
 
-export const mongooseUserSchema = new mongoose.Schema({
-    username: String,
-    name: String,
-    email: String,
-    image: String,
-    emailVerified: Date,
-    projectLikes: {
-        type: [Object],
+export const mongooseUserSchema = new mongoose.Schema(
+    {
+        name: {
+            type: String,
+            default: null,
+        },
+        email: {
+            type: String,
+            default: null,
+            unique: true,
+        },
+        image: {
+            type: String,
+            default: null,
+        },
+        emailVerified: {
+            type: Date,
+            default: null,
+        },
+        username: {
+            type: String,
+            default: null,
+            unique: true,
+        },
+        projectLikes: {
+            type: [Object],
+        },
+        followers: {
+            type: [Object],
+            default: [],
+        },
+        following: {
+            type: [Object],
+            default: [],
+        },
+        bio: {
+            type: String,
+            default: null,
+        },
+        skills: {
+            type: [String],
+            default: [],
+        },
+        isVerified: {
+            type: Boolean,
+            default: false,
+        },
     },
-    followers: [],
-    following: [],
-    bio: String,
-    skills: [],
-    createdAt: Date,
-    isVerified: Boolean,
-});
+    { timestamps: true }
+);
 
 export const mongooseUserModel =
     mongoose.models.users || mongoose.model("users", mongooseUserSchema);

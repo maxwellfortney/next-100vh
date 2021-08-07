@@ -8,124 +8,127 @@ import Navbar from "../../components/Navbar/Navbar";
 import ProfilePage from "../../components/UserProfile/ProfilePage/ProfilePage";
 
 export async function getServerSideProps(context) {
-  const { username } = context.params;
-  console.log("params", context.params);
-  console.log("typeof ", typeof username);
-  console.log("username ", username);
+    const { username } = context.params;
+    console.log("params", context.params);
+    console.log("typeof ", typeof username);
+    console.log("username ", username);
 
-  const res = await fetch(
-    `http://localhost:3000/api/users/getByUsername/${
-      username.length > 1 ? username[0] : username
-    }`
-  );
+    const res = await fetch(
+        `http://localhost:3000/api/users/getByUsername/${
+            username.length > 1 ? username[0] : username
+        }`
+    );
 
-  if (res.status === 404) {
-    return {
-      redirect: {
-        destination: "/404",
-        permanent: false,
-      },
-    };
-  } else if (res.status === 200) {
-    const user = await res.json();
+    if (res.status === 404) {
+        return {
+            redirect: {
+                destination: "/404",
+                permanent: false,
+            },
+        };
+    } else if (res.status === 200) {
+        const user = await res.json();
 
-    let menuViewProp = "projects";
-    if (username.length > 1) {
-      if (
-        username[1] == "projects" ||
-        username[1] == "likedProjects" ||
-        username[1] == "about"
-      ) {
-        menuViewProp = username[1];
-      }
+        let menuViewProp = "projects";
+        if (username.length > 1) {
+            if (
+                username[1] == "projects" ||
+                username[1] == "likedProjects" ||
+                username[1] == "about"
+            ) {
+                menuViewProp = username[1];
+            }
+        }
+
+        return {
+            props: {
+                username: user.username,
+                name: user.name,
+                image: user.image,
+                followers: user.followers.length,
+                following: user.following.length,
+                projectLikes: user.projectLikes,
+                bio: user.bio,
+                isVerified: user.isVerified,
+                createdAt: user.createdAt,
+                menuViewProp,
+            },
+        };
     }
-
-    return {
-      props: {
-        username: user.username,
-        name: user.name,
-        image: user.image,
-        followers: user.followers.length,
-        following: user.following.length,
-        projectLikes: user.projectLikes,
-        bio: user.bio,
-        createdAt: user.createdAt,
-        menuViewProp,
-      },
-    };
-  }
 }
 
 export default function UserPage({
-  username,
-  name,
-  image,
-  followers,
-  following,
-  projectLikes,
-  bio,
-  createdAt,
-  menuViewProp,
+    username,
+    name,
+    image,
+    followers,
+    following,
+    projectLikes,
+    bio,
+    isVerified,
+    createdAt,
+    menuViewProp,
 }) {
-  const router = useRouter();
-  const [menuView, setMenuView] = useState("projects");
+    const router = useRouter();
+    const [menuView, setMenuView] = useState("projects");
 
-  const [projects, setProjects] = useState<Array<any>>([]);
-  const [didFetchUser, setDidFetchUser] = useState(false);
+    const [projects, setProjects] = useState<Array<any>>([]);
+    const [didFetchUser, setDidFetchUser] = useState(false);
 
-  async function getProjects() {
-    const res = await fetch("/api/projects/getProjects/" + username);
+    async function getProjects() {
+        const res = await fetch("/api/projects/getProjects/" + username);
 
-    const projects = await res.json();
-    console.log(projects);
+        const projects = await res.json();
+        console.log(projects);
 
-    if (res.status === 200 && projects) {
-      setProjects(projects);
+        if (res.status === 200 && projects) {
+            setProjects(projects);
+        }
     }
-  }
 
-  useEffect(() => {
-    if (username) {
-      if (!didFetchUser) {
-        setDidFetchUser(true);
-        getProjects();
-      } else {
-        router.reload();
-      }
-    }
-  }, [username]);
+    useEffect(() => {
+        if (username) {
+            if (!didFetchUser) {
+                setDidFetchUser(true);
+                getProjects();
+            } else {
+                router.reload();
+            }
+        }
+    }, [username]);
 
-  useEffect(() => {
-    if (menuViewProp) {
-      setMenuView(menuViewProp);
-    }
-  }, [menuViewProp]);
+    useEffect(() => {
+        if (menuViewProp) {
+            setMenuView(menuViewProp);
+        }
+    }, [menuViewProp]);
 
-  return (
-    <div
-      className="flex flex-col items-center justify-center w-full min-h-screen bg-100vh-gray"
-      style={{ paddingTop: "92px" }}
-    >
-      <Head>
-        <title>{username} | 100vh</title>
-      </Head>
-      <Navbar />
+    return (
+        <div
+            className="flex flex-col items-center justify-center w-full min-h-screen bg-100vh-gray"
+            style={{ paddingTop: "92px" }}
+        >
+            <Head>
+                <title>{username} | 100vh</title>
+            </Head>
+            <Navbar />
 
-      <ProfilePage
-        username={username}
-        name={name}
-        image={image}
-        followers={followers}
-        following={following}
-        projectLikes={projectLikes}
-        projects={projects}
-        bio={bio}
-        createdAt={createdAt}
-        menuView={menuView}
-        setMenuView={setMenuView}
-      />
+            <ProfilePage
+                username={username}
+                name={name}
+                image={image}
+                followers={followers}
+                following={following}
+                projectLikes={projectLikes}
+                projects={projects}
+                bio={bio}
+                isVerified={isVerified}
+                createdAt={createdAt}
+                menuView={menuView}
+                setMenuView={setMenuView}
+            />
 
-      {/* {session ? (
+            {/* {session ? (
         <></>
       ) : (
         <svg
@@ -149,6 +152,6 @@ export default function UserPage({
           ></path>
         </svg>
       )} */}
-    </div>
-  );
+        </div>
+    );
 }
