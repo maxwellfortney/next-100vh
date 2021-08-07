@@ -14,7 +14,11 @@ export async function getServerSideProps(context) {
     console.log("username ", username);
 
     const res = await fetch(
-        `http://localhost:3000/api/users/getByUsername/${
+        `${
+            process.env.NODE_ENV === "production"
+                ? process.env.PROD_URL
+                : "http://localhost:3000"
+        }/api/users/getByUsername/${
             username.length > 1 ? username[0] : username
         }`
     );

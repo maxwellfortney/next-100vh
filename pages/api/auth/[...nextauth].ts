@@ -149,7 +149,11 @@ export default NextAuth({
 
             if (user?.email) {
                 const res = await fetch(
-                    "http://localhost:3000/api/users/getByEmail/" + user?.email
+                    `${
+                        process.env.NODE_ENV === "production"
+                            ? process.env.PROD_URL
+                            : "http://localhost:3000"
+                    }/api/users/getByEmail/` + user?.email
                 );
 
                 if (res.status === 200) {

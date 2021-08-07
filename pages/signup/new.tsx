@@ -55,7 +55,10 @@ export default function New() {
             await getSession();
             // router.push("/");
             signIn(provider as string, {
-                callbackUrl: "http://localhost:3000",
+                callbackUrl:
+                    process.env.NODE_ENV === "production"
+                        ? process.env.PROD_URL
+                        : "http://localhost:3000",
             });
         }
     }

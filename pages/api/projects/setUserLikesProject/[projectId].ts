@@ -19,7 +19,11 @@ export default async function handler(
 
     async function alreadyLiked() {
         const res = await fetch(
-            "http://localhost:3000/api/projects/getDoesUserLikeProject/" +
+            `${
+                process.env.NODE_ENV === "production"
+                    ? process.env.PROD_URL
+                    : "http://localhost:3000"
+            }/api/projects/getDoesUserLikeProject/` +
                 (session?.user as any).username +
                 "?projectId=" +
                 projectId
