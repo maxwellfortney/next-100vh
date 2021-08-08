@@ -122,7 +122,7 @@ function ProviderButton({
 }: ProviderButton) {
     const [isLoading, setIsloading] = useState(false);
 
-    function getProvderImage(provider) {
+    function getProviderImage(provider) {
         if (provider === "github") {
             return <FaGithub className="absolute mr-2 text-3xl left-2" />;
         } else if (provider === "gitlab") {
@@ -161,7 +161,7 @@ function ProviderButton({
                 }
             }}
         >
-            {getProvderImage(provider)}
+            {getProviderImage(provider)}
             {isLoading ? (
                 // <svg className="w-5 h-5 animate-spin" viewBox="0 0 24 24" />
                 <svg
