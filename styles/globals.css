@@ -6,176 +6,192 @@
 
 html,
 body {
-  overflow-x: hidden;
-  padding: 0;
-  margin: 0;
-  font-family: "Inter", -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
-    Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+    overflow-x: hidden;
+    padding: 0;
+    margin: 0;
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
+        Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue,
+        sans-serif;
 }
 
 .fade-enter {
-  opacity: 0;
+    opacity: 0;
 }
 .fade-enter-active {
-  opacity: 1;
-  transition: opacity 200ms ease-in-out;
+    opacity: 1;
+    transition: opacity 200ms ease-in-out;
 }
 .fade-exit {
-  opacity: 1;
+    opacity: 1;
 }
 .fade-exit-active {
-  opacity: 0;
-  transition: opacity 200ms ease-in-out;
+    opacity: 0;
+    transition: opacity 200ms ease-in-out;
+}
+
+.fade-fast-enter {
+    opacity: 0;
+}
+.fade-fast-enter-active {
+    opacity: 1;
+    transition: opacity 100ms ease-in-out;
+}
+.fade-fast-exit {
+    opacity: 1;
+}
+.fade-fast-exit-active {
+    opacity: 0;
+    transition: opacity 100ms ease-in-out;
 }
 
 .hamburger {
-  padding: 15px 15px;
-  display: inline-block;
-  cursor: pointer;
-  transition-property: opacity, filter;
-  transition-duration: 0.15s;
-  transition-timing-function: linear;
-  font: inherit;
-  color: inherit;
-  text-transform: none;
-  background-color: transparent;
-  border: 0;
-  margin: 0;
-  overflow: visible;
+    padding: 15px 15px;
+    display: inline-block;
+    cursor: pointer;
+    transition-property: opacity, filter;
+    transition-duration: 0.15s;
+    transition-timing-function: linear;
+    font: inherit;
+    color: inherit;
+    text-transform: none;
+    background-color: transparent;
+    border: 0;
+    margin: 0;
+    overflow: visible;
 }
 .hamburger:hover {
-  opacity: 0.7;
+    opacity: 0.7;
 }
 .hamburger.is-active:hover {
-  opacity: 0.7;
+    opacity: 0.7;
 }
 .hamburger.is-active .hamburger-inner,
 .hamburger.is-active .hamburger-inner::before,
 .hamburger.is-active .hamburger-inner::after {
-  background-color: #fff;
+    background-color: #fff;
 }
 
 .hamburger-box {
-  width: 40px;
-  height: 24px;
-  display: inline-block;
-  position: relative;
+    width: 40px;
+    height: 24px;
+    display: inline-block;
+    position: relative;
 }
 
 .hamburger-inner {
-  display: block;
-  top: 50%;
-  margin-top: -2px;
+    display: block;
+    top: 50%;
+    margin-top: -2px;
 }
 .hamburger-inner,
 .hamburger-inner::before,
 .hamburger-inner::after {
-  width: 40px;
-  height: 4px;
-  background-color: #fff;
-  border-radius: 4px;
-  position: absolute;
-  transition-property: transform;
-  transition-duration: 0.15s;
-  transition-timing-function: ease;
+    width: 40px;
+    height: 4px;
+    background-color: #fff;
+    border-radius: 4px;
+    position: absolute;
+    transition-property: transform;
+    transition-duration: 0.15s;
+    transition-timing-function: ease;
 }
 .hamburger-inner::before,
 .hamburger-inner::after {
-  content: "";
-  display: block;
+    content: "";
+    display: block;
 }
 .hamburger-inner::before {
-  top: -10px;
+    top: -10px;
 }
 .hamburger-inner::after {
-  bottom: -10px;
+    bottom: -10px;
 }
 
 /*
    * Slider
    */
 .hamburger--slider .hamburger-inner {
-  top: 2px;
+    top: 2px;
 }
 .hamburger--slider .hamburger-inner::before {
-  top: 10px;
-  transition-property: transform, opacity;
-  transition-timing-function: ease;
-  transition-duration: 0.15s;
+    top: 10px;
+    transition-property: transform, opacity;
+    transition-timing-function: ease;
+    transition-duration: 0.15s;
 }
 .hamburger--slider .hamburger-inner::after {
-  top: 20px;
+    top: 20px;
 }
 
 .hamburger--slider.is-active .hamburger-inner {
-  transform: translate3d(0, 10px, 0) rotate(45deg);
+    transform: translate3d(0, 10px, 0) rotate(45deg);
 }
 .hamburger--slider.is-active .hamburger-inner::before {
-  transform: rotate(-45deg) translate3d(-5.71429px, -6px, 0);
-  opacity: 0;
+    transform: rotate(-45deg) translate3d(-5.71429px, -6px, 0);
+    opacity: 0;
 }
 .hamburger--slider.is-active .hamburger-inner::after {
-  transform: translate3d(0, -20px, 0) rotate(-90deg);
+    transform: translate3d(0, -20px, 0) rotate(-90deg);
 }
 
 .mobile-menu {
-  left: 100%;
+    left: 100%;
 }
 
 .mobile-menu.is-open {
-  left: 0;
+    left: 0;
 }
 
 /* width */
 ::-webkit-scrollbar {
-  width: 7px;
+    width: 7px;
 }
 
 /* Track */
 ::-webkit-scrollbar-track {
-  background: #131313;
+    background: #131313;
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 999px;
+    background: #888;
+    border-radius: 999px;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: #555;
+    background: #555;
 }
 
 /* Loader */
 .loader {
-  border: 4px solid #131313; /* Light grey */
-  border-top: 4px solid #2e2e2e; /* Blue */
-  border-radius: 50%;
-  width: 30px;
-  height: 30px;
-  animation: spin 1.3s linear infinite;
+    border: 4px solid #131313; /* Light grey */
+    border-top: 4px solid #2e2e2e; /* Blue */
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    animation: spin 1.3s linear infinite;
 }
 
 @keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 @layer utilities {
-  @variants responsive {
-    /* Chrome, Safari and Opera */
-    .no-scrollbar::-webkit-scrollbar {
-      display: none;
-    }
+    @variants responsive {
+        /* Chrome, Safari and Opera */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
 
-    .no-scrollbar {
-      -ms-overflow-style: none; /* IE and Edge */
-      scrollbar-width: none; /* Firefox */
+        .no-scrollbar {
+            -ms-overflow-style: none; /* IE and Edge */
+            scrollbar-width: none; /* Firefox */
+        }
     }
-  }
 }

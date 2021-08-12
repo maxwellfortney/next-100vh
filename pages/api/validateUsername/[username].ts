@@ -10,16 +10,14 @@ export default async function handler(
 ) {
     const { username } = req.query;
 
+    if (!username) {
+        res.status(400).send("Bad request: missing parameters: username");
+        return;
+    }
+
     await dbConnect();
 
-    let status = 404;
+    const user = await mongooseUserModel.findOne({ username });
 
-    await mongooseUserModel.findOne({ username }, function (err, user) {
-        if (err) {
-            status = 404;
-        } else {
-            status = 200;
-            res.status(status).json({ isAvailable: user == null });
-        }
-    });
+    res.status(200).json({ isAvailable: user == null });
 }
