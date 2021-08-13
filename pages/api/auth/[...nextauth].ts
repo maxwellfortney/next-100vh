@@ -32,7 +32,7 @@ export default NextAuth({
             clientId: process.env.GITHUB_ID,
             clientSecret: process.env.GITHUB_SECRET,
             // https://docs.github.com/en/developers/apps/building-oauth-apps/scopes-for-oauth-apps
-            scope: "read:user repo",
+            scope: "repo,user",
         }),
         Providers.GitLab({
             clientId: process.env.GITLAB_CLIENT_ID,
@@ -127,35 +127,44 @@ export default NextAuth({
                     console.log(resJson);
                     session.user = resJson;
                 }
-
-                // session.user = token.user as any;
             }
+
+            if (token.accessToken) {
+                session.accessToken = token.accessToken;
+            }
+
             return session;
         },
-        // async jwt(token, user, account, profile, isNewUser) {
-        //     // console.log("1", token);
-        //     // console.log("2", user);
-        //     // console.log("3", account);
-        //     // console.log("4", profile);
-        //     // console.log("5", isNewUser);
+        async jwt(token, user, account, profile, isNewUser) {
+            console.log("1", token);
+            console.log("2", user);
+            console.log("3", account);
+            console.log("4", profile);
+            console.log("5", isNewUser);
 
-        //     if (user?.email) {
-        //         const res = await fetch(
-        //             `${
-        //                 process.env.NODE_ENV === "production"
-        //                     ? process.env.PROD_URL
-        //                     : "http://localhost:3000"
-        //             }/api/users/getByEmail/` + user.email
-        //         );
+            if (account?.access_token) {
+                token.accessToken = account?.access_token;
+            } else if (account?.accessToken) {
+                token.accessToken = account?.accessToken;
+            }
 
-        //         if (res.status === 200) {
-        //             const resJson = await res.json();
+            // if (user?.email) {
+            //     const res = await fetch(
+            //         `${
+            //             process.env.NODE_ENV === "production"
+            //                 ? process.env.PROD_URL
+            //                 : "http://localhost:3000"
+            //         }/api/users/getByEmail/` + user.email
+            //     );
 
-        //             token.user = resJson;
-        //         }
-        //     }
-        //     return token;
-        // },
+            //     if (res.status === 200) {
+            //         const resJson = await res.json();
+
+            //         token.user = resJson;
+            //     }
+            // }
+            return token;
+        },
     },
 
     // Events are useful for logging

@@ -167,7 +167,12 @@ function ProviderButton({
             onClick={() => {
                 setIsloading(true);
                 if (!isEmail) {
-                    signIn(provider);
+                    signIn(provider, {
+                        callbackUrl:
+                          process.env.NODE_ENV === "production"
+                            ? process.env.PROD_URL
+                            : "http://localhost:3000",
+                      });
                 }
             }}
         >

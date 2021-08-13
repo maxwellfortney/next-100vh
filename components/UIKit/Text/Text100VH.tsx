@@ -1,9 +1,8 @@
-import { useState } from "react";
-
 export default function Text100VH({
     label,
     defaultGradient = false,
     isLink = false,
+    onClick = undefined,
     href = "",
     isActive = false,
     className = "",
@@ -12,6 +11,7 @@ export default function Text100VH({
         if (isLink && href) {
             return (
                 <a
+                    onClick={onClick}
                     href={href}
                     className={`relative flex group ${
                         className ? className : ""
@@ -28,6 +28,7 @@ export default function Text100VH({
         } else {
             return (
                 <div
+                    onClick={onClick}
                     className={`relative flex group ${
                         className ? className : ""
                     }`}
@@ -45,6 +46,7 @@ export default function Text100VH({
         if (isLink && href) {
             return (
                 <a
+                    onClick={onClick}
                     href={href}
                     className={`relative flex group ${
                         className ? className : ""
@@ -61,6 +63,7 @@ export default function Text100VH({
         } else {
             return (
                 <div
+                    onClick={onClick}
                     className={`relative flex group ${
                         className ? className : ""
                     }`}
