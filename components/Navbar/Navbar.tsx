@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import SignUp from "../SignUp/SignUp";
 import Link from "next/link";
 import MobileMenu from "./MobileMenu";
 import { CSSTransition } from "react-transition-group";
@@ -13,25 +12,11 @@ export default function Navbar() {
     const [session, loading] = useSession();
 
     const router = useRouter();
-    const { query, pathname } = router;
-
-    const [scrollHeight, setScrollHeight] = useState(0);
-    const [blurBg, setBlurBg] = useState(false);
-    const [isSignIn, setIsSignIn] = useState(false);
-    const [isSignUp, setIsSignUp] = useState(false);
+    const { pathname } = router;
 
     const [menuOpen, setMenuOpen] = useState(false);
     const [scrollY, setScrollY] = useState(0);
     const [mouseY, setMouseY] = useState(0);
-
-    // useEffect(() => {
-    //     console.log(session);
-    //     if (session && session?.user) {
-    //         if (!(session.user as any).username) {
-    //             router.push("/signup/new");
-    //         }
-    //     }
-    // }, [session]);
 
     useEffect(() => {
         console.log(session);
@@ -68,19 +53,6 @@ export default function Navbar() {
     return (
         <>
             <MobileMenu menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
-            <CSSTransition
-                in={blurBg}
-                timeout={200}
-                classNames="fade"
-                unmountOnExit
-            >
-                <SignUp
-                    blurBg={blurBg}
-                    setBlurBg={setBlurBg}
-                    isSignIn={isSignIn}
-                    isSignUp={isSignUp}
-                />
-            </CSSTransition>
             <div
                 className="fixed z-10 flex items-center justify-between mt-8 transition-all duration-300"
                 style={{
@@ -151,9 +123,9 @@ export default function Navbar() {
                             <DropdownToggle session={session} />
                             <Button100VH
                                 styleType={3}
-                                label="upload"
+                                label="create"
                                 isLink={true}
-                                href="/upload"
+                                href="/create"
                                 className="px-5 py-4 ml-2"
                             />
                         </>

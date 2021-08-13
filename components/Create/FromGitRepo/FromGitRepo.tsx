@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { createContext } from "react";
 import { useContext } from "react";
 import { useState } from "react";
-import { UploadContext } from "../../../pages/upload";
+import { CreateContext } from "../../../pages/create";
 import Box100VH from "../../UIKit/Boxes/Box100VH";
 import Text100VH from "../../UIKit/Text/Text100VH";
 import SelectOrganization from "./SelectOrganization";
@@ -20,7 +20,7 @@ export default function FromGitRepo() {
     const [repos, setRepos] = useState<any>([]);
     const [searchString, setSearchString] = useState("");
 
-    const { isHoveringRightDiv } = useContext(UploadContext);
+    const { activeDiv, setActiveDiv } = useContext(CreateContext);
 
     async function fetchDefaultOrg() {
         const res = await fetch(
@@ -69,8 +69,12 @@ export default function FromGitRepo() {
             }}
         >
             <Box100VH
-                isActive={!isHoveringRightDiv}
+                onMouseEnter={() => {
+                    setActiveDiv("FromGitRepo");
+                }}
+                isActive={activeDiv === "FromGitRepo"}
                 className="flex flex-col items-center justify-start p-3"
+                style={{ minHeight: "450px" }}
             >
                 <h1 className="self-start mb-3 text-2xl font-bold">
                     import github repo

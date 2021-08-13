@@ -10,6 +10,7 @@ interface CommonProps {
     isActive?: boolean;
     onMouseEnter?: Function;
     onMouseLeave?: Function;
+    style?: Object;
 }
 
 type ConditionalProps =
@@ -34,6 +35,7 @@ export default function Box100VH({
     className,
     children,
     isActive = false,
+    style,
 }: Box100VH) {
     const [isHovering, setIsHovering] = useState(false);
 
@@ -61,6 +63,7 @@ export default function Box100VH({
             className={`relative flex transition-opacity duration-300 bg-gradient-to-br from-100vh-cyan to-100vh-purple ${
                 !isHovering && !isActive ? "opacity-40" : ""
             }`}
+            style={style}
         >
             <div
                 className={`absolute flex transition-all duration-300 bg-gray-400 ${

@@ -60,7 +60,7 @@ export default function New() {
         return isAvailable;
     }
 
-    const usernameRegex = new RegExp("^[A-Za-z0-9][A-Za-z0-9_\\-\\.]{0,32}$");
+    const usernameRegex = new RegExp("^[A-Za-z0-9][A-Za-z0-9_\\-\\.]{0,31}$");
 
     async function checkIsValid(username) {
         setInvalidMessage(null);
@@ -82,7 +82,7 @@ export default function New() {
         if (username.indexOf(" ") !== -1) {
             setInvalidMessage("spaces not allowed");
         }
-        if (username.length > 20) {
+        if (username.length > 32) {
             setInvalidMessage("too long");
         }
 
