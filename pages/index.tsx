@@ -6,9 +6,13 @@ import Link from "next/link";
 import styles from "../styles/Home/Home.module.css";
 import Button100VH from "../components/UIKit/Buttons/Button100VH";
 import { useEffect } from "react";
-import { signOut } from "next-auth/client";
+import { signOut, useSession } from "next-auth/client";
 
 export default function Home() {
+    const [session, loading] = useSession();
+
+    if (loading) return null;
+
     return (
         <div
             id="main-container"
@@ -33,9 +37,9 @@ export default function Home() {
                     <div className="flex text-xl">
                         <Button100VH
                             styleType={2}
-                            label="create"
+                            label={!loading && !session ? "about" : "create"}
                             isLink={true}
-                            href="/create"
+                            href={!loading && !session ? "/about" : "/create"}
                             className="mr-2"
                         />
                         <Button100VH

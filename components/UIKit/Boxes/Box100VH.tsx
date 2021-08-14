@@ -55,33 +55,66 @@ export default function Box100VH({
         }
     }
 
-    return (
-        <div
-            onClick={onClick}
-            onMouseEnter={handleMouseIn}
-            onMouseLeave={handleMouseOut}
-            className={`relative flex transition-opacity duration-300 bg-gradient-to-br from-100vh-cyan to-100vh-purple ${
-                !isHovering && !isActive ? "opacity-40" : ""
-            }`}
-            style={style}
-        >
-            <div
-                className={`absolute flex transition-all duration-300 bg-gray-400 ${
-                    isHovering || isActive ? "opacity-0" : "opacity-100"
+    if (isLink) {
+        return (
+            <a
+                href={href}
+                onClick={onClick}
+                onMouseEnter={handleMouseIn}
+                onMouseLeave={handleMouseOut}
+                className={`relative flex transition-opacity duration-300 bg-gradient-to-br from-100vh-cyan to-100vh-purple ${
+                    !isHovering && !isActive ? "opacity-40" : ""
                 }`}
-                style={{
-                    width: "calc(100%)",
-                    height: "calc(100%)",
-                }}
-            />
-            <div
-                className={`w-full m-1 bg-100vh-gray ${
-                    className ? className : ""
-                }`}
-                style={{ zIndex: 1 }}
+                style={style}
             >
-                {children}
+                <div
+                    className={`absolute flex transition-all duration-300 bg-gray-400 ${
+                        isHovering || isActive ? "opacity-0" : "opacity-100"
+                    }`}
+                    style={{
+                        width: "calc(100%)",
+                        height: "calc(100%)",
+                    }}
+                />
+                <div
+                    className={`w-full m-1 bg-100vh-gray ${
+                        className ? className : ""
+                    }`}
+                    style={{ zIndex: 1 }}
+                >
+                    {children}
+                </div>
+            </a>
+        );
+    } else {
+        return (
+            <div
+                onClick={onClick}
+                onMouseEnter={handleMouseIn}
+                onMouseLeave={handleMouseOut}
+                className={`relative flex transition-opacity duration-300 bg-gradient-to-br from-100vh-cyan to-100vh-purple ${
+                    !isHovering && !isActive ? "opacity-40" : ""
+                }`}
+                style={style}
+            >
+                <div
+                    className={`absolute flex transition-all duration-300 bg-gray-400 ${
+                        isHovering || isActive ? "opacity-0" : "opacity-100"
+                    }`}
+                    style={{
+                        width: "calc(100%)",
+                        height: "calc(100%)",
+                    }}
+                />
+                <div
+                    className={`w-full m-1 bg-100vh-gray ${
+                        className ? className : ""
+                    }`}
+                    style={{ zIndex: 1 }}
+                >
+                    {children}
+                </div>
             </div>
-        </div>
-    );
+        );
+    }
 }

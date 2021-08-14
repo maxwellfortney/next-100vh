@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import AProject from "./AProject";
 import type { AProjectType } from "./AProject";
 import { useSession } from "next-auth/client";
+import Box100VH from "../UIKit/Boxes/Box100VH";
 
 export default function Projects() {
     const router = useRouter();
@@ -66,12 +67,14 @@ export default function Projects() {
                         <>
                             {session &&
                             (session.user as any).username == username ? (
-                                <div
-                                    className="relative flex items-center justify-center w-full mb-4 overflow-hidden bg-red-200 group"
+                                <Box100VH
+                                    isLink={true}
+                                    href="/create"
+                                    className="flex items-center justify-center cursor-pointer"
                                     style={{ height: "35vh" }}
                                 >
                                     <svg
-                                        className="w-6 h-6"
+                                        className="w-6 h-6 text-white"
                                         fill="none"
                                         viewBox="0 0 24 24"
                                         stroke="currentColor"
@@ -83,10 +86,10 @@ export default function Projects() {
                                             d="M12 4v16m8-8H4"
                                         />
                                     </svg>
-                                </div>
+                                </Box100VH>
                             ) : (
                                 <div
-                                    className="relative flex w-full mb-4 overflow-hidden group"
+                                    className="relative flex items-start justify-start w-full mb-4 overflow-hidden font-semibold text-white group"
                                     style={{ height: "35vh" }}
                                 >
                                     this user has no projects :(

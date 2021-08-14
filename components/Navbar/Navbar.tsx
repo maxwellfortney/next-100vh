@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-html-link-for-pages */
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import MobileMenu from "./MobileMenu";
@@ -121,13 +122,19 @@ export default function Navbar() {
                     {session ? (
                         <>
                             <DropdownToggle session={session} />
-                            <Button100VH
-                                styleType={3}
-                                label="create"
-                                isLink={true}
+                            <a
                                 href="/create"
-                                className="px-5 py-4 ml-2"
-                            />
+                                className={`relative flex items-center justify-center font-extrabold group bg-gradient-to-br from-100vh-cyan to-100vh-purple px-5 py-4 ml-2`}
+                            >
+                                <div
+                                    className="absolute transition-colors duration-300 bg-transparent group-hover:bg-100vh-gray"
+                                    style={{
+                                        width: "calc(100% - 8px)",
+                                        height: "calc(100% - 8px)",
+                                    }}
+                                />
+                                <p style={{ zIndex: 1 }}>create</p>
+                            </a>
                         </>
                     ) : (
                         <>
