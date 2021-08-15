@@ -319,13 +319,13 @@ export default function ProfilePage({
                 <div className="flex items-center text-xl font-bold text-white">
                     <a
                         onClick={() => {
-                            router.push(
-                                {
-                                    pathname: `${username}`,
-                                },
-                                undefined,
-                                { shallow: true }
-                            );
+                            // router.push(
+                            //     {
+                            //         pathname: `${username}`,
+                            //     },
+                            //     undefined,
+                            //     { shallow: true }
+                            // );
                             setMenuView("projects");
                         }}
                         className="flex items-center transition-opacity duration-300 cursor-pointer hover:opacity-50"
@@ -339,13 +339,13 @@ export default function ProfilePage({
                     {projectLikes && projectLikes.length > 0 && (
                         <a
                             onClick={() => {
-                                router.push(
-                                    {
-                                        pathname: `${username}/likedProjects`,
-                                    },
-                                    undefined,
-                                    { shallow: true }
-                                );
+                                // router.push(
+                                //     {
+                                //         pathname: `${username}/likedProjects`,
+                                //     },
+                                //     undefined,
+                                //     { shallow: true }
+                                // );
                                 setMenuView("likedProjects");
                             }}
                             className="flex items-center transition-opacity duration-300 cursor-pointer hover:opacity-50"
@@ -359,13 +359,13 @@ export default function ProfilePage({
 
                     <a
                         onClick={() => {
-                            router.push(
-                                {
-                                    pathname: `${username}/about`,
-                                },
-                                undefined,
-                                { shallow: true }
-                            );
+                            // router.push(
+                            //     {
+                            //         pathname: `${username}/about`,
+                            //     },
+                            //     undefined,
+                            //     { shallow: true }
+                            // );
                             setMenuView("about");
                         }}
                         className="flex items-center transition-opacity duration-300 cursor-pointer hover:opacity-50"

@@ -24,16 +24,16 @@ export async function getServerSideProps(context) {
     if (res.status === 200) {
         const user = await res.json();
 
-        let menuViewProp = "projects";
-        if (username.length > 1) {
-            if (
-                username[1] == "projects" ||
-                username[1] == "likedProjects" ||
-                username[1] == "about"
-            ) {
-                menuViewProp = username[1];
-            }
-        }
+        // let menuViewProp = "projects";
+        // if (username.length > 1) {
+        //     if (
+        //         username[1] == "projects" ||
+        //         username[1] == "likedProjects" ||
+        //         username[1] == "about"
+        //     ) {
+        //         menuViewProp = username[1];
+        //     }
+        // }
 
         return {
             props: {
@@ -46,7 +46,7 @@ export async function getServerSideProps(context) {
                 bio: user.bio,
                 isVerified: user.isVerified,
                 createdAt: user.createdAt,
-                menuViewProp,
+                // menuViewProp,
             },
         };
     } else {
