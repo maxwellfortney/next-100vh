@@ -64,3 +64,14 @@ export async function addLikeToProject(projectId: string) {
         return false;
     }
 }
+
+export async function addViewToProject(projectId: string) {
+    try {
+        await mongooseProjectModel.findByIdAndUpdate(projectId, {
+            $inc: { views: 1 },
+        });
+        return true;
+    } catch (e) {
+        return false;
+    }
+}

@@ -5,7 +5,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { CSSTransition } from "react-transition-group";
 import { CreateContext } from "../../../pages/create";
-import RenderPreview from "./RenderPreview";
+import ProjectIFrame from "../../Project/ProjectIFrame";
 
 const titleRegex = new RegExp("^[A-Za-z0-9][A-Za-z0-9_\\-\\. ]{0,34}$");
 
@@ -116,7 +116,7 @@ export default function FinishCreate() {
 
     return (
         <div className="absolute flex flex-col items-center justify-center w-full h-full">
-            <div className="flex flex-col items-center justify-center w-11/12 h-full md:w-5/6">
+            <div className="flex flex-col items-center justify-center w-11/12 h-full md:w-5/6 animate-fadeIn">
                 <p
                     className="self-start ml-1 text-red-600"
                     style={{ minHeight: "24px" }}
@@ -180,7 +180,12 @@ export default function FinishCreate() {
                     </CSSTransition>
                 </div>
                 <div className="flex w-full h-full">
-                    <RenderPreview />
+                    <ProjectIFrame
+                        html={htmlFile?.text}
+                        css={cssFile?.text}
+                        js={jsFile?.text}
+                        scale={0.75}
+                    />
                 </div>
                 <div className="flex items-center w-full mt-4 mb-8">
                     {tags.map((tag) => {

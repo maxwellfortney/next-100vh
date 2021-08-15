@@ -18,19 +18,10 @@ export async function getServerSideProps(context) {
             process.env.NODE_ENV === "production"
                 ? process.env.PROD_URL
                 : "http://localhost:3000"
-        }/api/users/getByUsername/${
-            username.length > 1 ? username[0] : username
-        }`
+        }/api/users/getByUsername/${username}`
     );
 
-    if (res.status === 404) {
-        return {
-            redirect: {
-                destination: "/404",
-                permanent: false,
-            },
-        };
-    } else if (res.status === 200) {
+    if (res.status === 200) {
         const user = await res.json();
 
         let menuViewProp = "projects";
@@ -56,6 +47,13 @@ export async function getServerSideProps(context) {
                 isVerified: user.isVerified,
                 createdAt: user.createdAt,
                 menuViewProp,
+            },
+        };
+    } else {
+        return {
+            redirect: {
+                destination: "/404",
+                permanent: false,
             },
         };
     }

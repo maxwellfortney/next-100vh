@@ -8,6 +8,7 @@ interface CommonProps {
     onClick?: (any) => any;
     className?: string;
     borderWidth?: number;
+    disabled?: boolean;
 }
 
 type ConditionalProps =
@@ -30,6 +31,7 @@ export default function Button100VH({
     href,
     className,
     borderWidth = 4,
+    disabled = false,
 }: Button100VH) {
     if (styleType === 1) {
         if (isLink && href) {
@@ -64,6 +66,7 @@ export default function Button100VH({
         }
         return (
             <button
+                disabled={disabled}
                 onClick={onClick}
                 className={`relative flex font-extrabold cursor-pointer group bg-gradient-to-br from-100vh-cyan to-100vh-purple ${
                     className ? className : ""
@@ -105,6 +108,7 @@ export default function Button100VH({
         }
         return (
             <button
+                disabled={disabled}
                 onClick={onClick}
                 className={`flex font-extrabold cursor-pointer group bg-gradient-to-br from-100vh-cyan to-100vh-purple ${
                     className ? className : ""
@@ -139,6 +143,7 @@ export default function Button100VH({
         }
         return (
             <button
+                disabled={disabled}
                 onClick={onClick}
                 className={`relative flex items-center justify-center font-extrabold group bg-gradient-to-br from-100vh-cyan to-100vh-purple ${
                     className ? className : ""
