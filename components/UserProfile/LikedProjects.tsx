@@ -46,8 +46,9 @@ export default function LikedProjects() {
                 ownerUsername={project.ownerUsername}
                 createdAt={project.createdAt}
                 updatedAt={project.updatedAt}
-                htmlString={project.htmlString}
-                cssString={project.cssString}
+                html={project.html}
+                css={project.css}
+                js={project.js}
                 i={i}
               />
             );

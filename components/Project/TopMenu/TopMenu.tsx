@@ -21,10 +21,12 @@ export default function TopMenu({ showMenus, setShowMenus, project }) {
                 <h1 className="text-5xl font-bold lg:text-6xl">
                     {project.title}
                 </h1>
-                <div className="flex items-center self-end pb-1 ml-3">
-                    <p className="mr-1 ">by</p>
-                    <h2>{project.ownerUsername}</h2>
-                </div>
+                <Link href={`/${project.ownerUsername}`}>
+                    <a className="flex items-center self-end ml-3 transition-colors pb-0.5 border-b border-transparent hover:border-white">
+                        <p className="mr-1 ">by</p>
+                        <h2>{project.ownerUsername}</h2>
+                    </a>
+                </Link>
             </div>
             <div className="flex">
                 <svg
