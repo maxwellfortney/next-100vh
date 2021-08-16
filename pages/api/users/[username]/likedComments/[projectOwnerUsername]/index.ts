@@ -1,18 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { mongooseUserModel } from "../../../../../../../models/User";
-import dbConnect from "../../../../../../../utils/mongodb";
+import { mongooseUserModel } from "../../../../../../models/User";
+import dbConnect from "../../../../../../utils/mongodb";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<any>
 ) {
-  const {
-    username,
-    title,
-    projectOwnerUsername,
-    perPage = 35,
-    page = 0,
-  } = req.query;
+  const { username, projectOwnerUsername, perPage = 35, page = 0 } = req.query;
 
   if (!username) {
     res.status(400).send("Bad request: missing parameters: username");
@@ -22,10 +16,6 @@ export default async function handler(
     res
       .status(400)
       .send("Bad request: missing parameters: projectOwnerUsername");
-    return;
-  }
-  if (!title) {
-    res.status(400).send("Bad request: missing parameters: title");
     return;
   }
 
@@ -40,22 +30,26 @@ export default async function handler(
     {
       username,
     },
-    "likedProjects"
+    "likedComments"
   );
 
   if (user) {
-    let likedProjects = [];
-    likedProjects = user.likedProjects.filter(
-      (like) =>
-        like.projectOwnerUsername == projectOwnerUsername &&
-        like.projectTitle == title
+    let likedComments = [];
+    likedComments = user.likedComments.filter(
+      (like) => like.projectOwnerUsername == projectOwnerUsername
     );
 
-    if (likedProjects.length > 0) {
-      res.status(200).json(JSON.stringify(likedProjects[0], null, 2));
+    likedComments = likedComments.slice(
+      parseInt(page as any) * parseInt(perPage as any),
+      parseInt(page as any) * parseInt(perPage as any) +
+        parseInt(perPage as any)
+    );
+
+    if (likedComments.length > 0) {
+      res.status(200).json(JSON.stringify(likedComments, null, 2));
       return;
     } else {
-      res.status(404).send("user doesn't like project");
+      res.status(404).send("user doesnt like any projects from otherUser");
     }
   } else {
     res.status(404).send("Bad request: error getting user");

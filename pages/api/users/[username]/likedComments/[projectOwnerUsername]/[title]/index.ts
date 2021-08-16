@@ -40,22 +40,22 @@ export default async function handler(
     {
       username,
     },
-    "likedProjects"
+    "likedComments"
   );
 
   if (user) {
-    let likedProjects = [];
-    likedProjects = user.likedProjects.filter(
+    let likedComments = [];
+    likedComments = user.likedComments.filter(
       (like) =>
         like.projectOwnerUsername == projectOwnerUsername &&
         like.projectTitle == title
     );
 
-    if (likedProjects.length > 0) {
-      res.status(200).json(JSON.stringify(likedProjects[0], null, 2));
+    if (likedComments.length > 0) {
+      res.status(200).json(JSON.stringify(likedComments[0], null, 2));
       return;
     } else {
-      res.status(404).send("user doesn't like project");
+      res.status(404).send("user doesn't like project from user");
     }
   } else {
     res.status(404).send("Bad request: error getting user");

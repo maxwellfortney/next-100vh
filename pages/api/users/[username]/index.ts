@@ -1,23 +1,26 @@
 import type { NextApiRequest, NextApiResponse } from "next";
+import dbConnect from "../../../../utils/mongodb";
 import { getUserByUsername } from "../../../../utils/server/user";
 
 export default async function handler(
-    req: NextApiRequest,
-    res: NextApiResponse<any>
+  req: NextApiRequest,
+  res: NextApiResponse<any>
 ) {
-    const { username, followers, following } = req.query;
+  const { username, followers, following } = req.query;
 
-    if (!username) {
-        res.status(400).send("Bad request: missing parameters: username");
-        return;
-    }
+  if (!username) {
+    res.status(400).send("Bad request: missing parameters: username");
+    return;
+  }
 
-    const user = await getUserByUsername(username as string, "");
+  await dbConnect();
 
-    if (user) {
-        res.status(200).json(JSON.stringify(user, null, 2));
-        return;
-    } else {
-        res.status(400).send("Bad request: error getting user");
-    }
+  const user = await getUserByUsername(username as string, "");
+
+  if (user) {
+    res.status(200).json(JSON.stringify(user, null, 2));
+    return;
+  } else {
+    res.status(404).send("Bad request: user doesn't exist");
+  }
 }

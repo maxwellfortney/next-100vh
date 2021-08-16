@@ -25,16 +25,16 @@ export default async function handler(
     {
       username,
     },
-    "followers"
+    "likedComments"
   );
 
-  const followers = user.followers.slice(
+  const likedComments = user.likedComments.slice(
     parseInt(page as any) * parseInt(perPage as any),
     parseInt(page as any) * parseInt(perPage as any) + parseInt(perPage as any)
   );
 
-  if (followers) {
-    res.status(200).json(JSON.stringify(followers, null, 2));
+  if (likedComments) {
+    res.status(200).json(JSON.stringify(likedComments, null, 2));
     return;
   } else {
     res.status(400).send("Bad request: error getting user's followers");

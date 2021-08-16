@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { mongooseUserModel } from "../../../../../../../models/User";
-import dbConnect from "../../../../../../../utils/mongodb";
+import { mongooseUserModel } from "../../../../../../../../models/User";
+import dbConnect from "../../../../../../../../utils/mongodb";
 
 export default async function handler(
   req: NextApiRequest,
@@ -10,6 +10,7 @@ export default async function handler(
     username,
     title,
     projectOwnerUsername,
+    id,
     perPage = 35,
     page = 0,
   } = req.query;
@@ -28,6 +29,10 @@ export default async function handler(
     res.status(400).send("Bad request: missing parameters: title");
     return;
   }
+  if (!id) {
+    res.status(400).send("Bad request: missing parameters: id");
+    return;
+  }
 
   if (parseInt(perPage as any) > 100) {
     res.status(400).send("Bad request: perPage must be under 100");
@@ -40,22 +45,29 @@ export default async function handler(
     {
       username,
     },
-    "likedProjects"
+    "likedComments"
   );
 
   if (user) {
-    let likedProjects = [];
-    likedProjects = user.likedProjects.filter(
+    let likedComments = [];
+    likedComments = user.likedComments.filter(
       (like) =>
         like.projectOwnerUsername == projectOwnerUsername &&
-        like.projectTitle == title
+        like.projectTitle == title &&
+        like.commentId == id
     );
 
-    if (likedProjects.length > 0) {
-      res.status(200).json(JSON.stringify(likedProjects[0], null, 2));
+    likedComments = likedComments.slice(
+      parseInt(page as any) * parseInt(perPage as any),
+      parseInt(page as any) * parseInt(perPage as any) +
+        parseInt(perPage as any)
+    );
+
+    if (likedComments.length > 0) {
+      res.status(200).json(JSON.stringify(likedComments[0], null, 2));
       return;
     } else {
-      res.status(404).send("user doesn't like project");
+      res.status(404).send("user doesnt like this comment");
     }
   } else {
     res.status(404).send("Bad request: error getting user");
