@@ -52,7 +52,8 @@ export default function AProject({
             if (!didFetchIsLiked) {
                 const doesLike = await doesUserLikeProject(
                     (session?.user as any).username,
-                    _id
+                    ownerUsername,
+                    title
                 );
                 setIsLiked(doesLike);
                 setDidFetchIsLiked(true);
@@ -66,14 +67,15 @@ export default function AProject({
         if (didFetchIsLiked) {
             //toggle the like
             const res = await fetch(
-                `/api/projects/setUserLikesProject/${_id}?shouldLike=${
-                    isLiked ? "false" : "true"
-                }`
+                `/api/users/${ownerUsername}/projects/${title}/likes`,
+                {
+                    method: isLiked ? "DELETE" : "POST",
+                }
             );
 
             console.log(await res.text());
 
-            if (res.status === 200) {
+            if (res.status === 204) {
                 setLikesState(likesState + (isLiked ? -1 : 1));
                 setIsLiked(!isLiked);
             }

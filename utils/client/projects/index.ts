@@ -1,23 +1,31 @@
-export async function doesUserLikeProject(username: string, projectId: string) {
+export async function doesUserLikeProject(
+    username: string,
+    projectOwnerUsername: string,
+    projectTitle: string
+) {
     const res = await fetch(
-        "/api/projects/getDoesUserLikeProject/" +
-            username +
-            "/?projectId=" +
-            projectId
+        process.env.NODE_ENV === "production"
+            ? (process.env.PROD_URL as string)
+            : "http://localhost:3000" +
+                  `/api/users/${username}/likedProjects/${projectOwnerUsername}/${projectTitle}`
     );
 
     if (res.status === 200) {
-        const userDidLike = await res.json();
-        return userDidLike;
+        return true;
     } else {
-        return { error: res.status };
+        return false;
     }
 }
 
-export async function addViewToProject(projectId: string) {
-    const res = await fetch("/api/projects/addView/" + projectId);
+export async function addViewToProject(project: any) {
+    const res = await fetch(
+        `/api/users/${project.ownerUsername}/projects/${project.title}/views`,
+        {
+            method: "POST",
+        }
+    );
 
-    if (res.status === 200) {
+    if (res.status === 204) {
         return true;
     } else {
         return { error: res.status };

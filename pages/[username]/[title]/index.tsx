@@ -26,7 +26,7 @@ export async function getServerSideProps(context) {
             process.env.NODE_ENV === "production"
                 ? process.env.PROD_URL
                 : "http://localhost:3000"
-        }/api/users/getProjectForUser/${username}?title=${title}`
+        }/api/users/${username}/projects/${title}`
     );
 
     if (res.status === 200) {
@@ -56,6 +56,12 @@ export default function UserPage({ username, title, project }) {
         console.log(project);
     }, []);
 
+    async function setDidView() {
+        if ((await addViewToProject(project)) === true) {
+            localStorage.setItem(`didViewProject/${username}/${title}`, "true");
+        }
+    }
+
     useEffect(() => {
         const didView =
             localStorage.getItem(`didViewProject/${username}/${title}`) ===
@@ -63,8 +69,7 @@ export default function UserPage({ username, title, project }) {
         console.log(didView);
 
         if (!didView) {
-            localStorage.setItem(`didViewProject/${username}/${title}`, "true");
-            addViewToProject(project._id);
+            setDidView();
         }
     }, []);
 
@@ -76,8 +81,8 @@ export default function UserPage({ username, title, project }) {
                 project={project}
             />
             <div className="flex w-full h-full">
-                <div className="relative flex w-full">
-                    <div className="absolute flex flex-col items-center justify-start w-full h-full">
+                <div className="relative flex justify-center w-full">
+                    <div className="absolute top-0 flex flex-col items-center justify-start">
                         <div
                             className={`flex w-12 h-5 transition-opacity bg-100vh-gray ${
                                 showMenus ? "opacity-0" : "opac opacity-100"

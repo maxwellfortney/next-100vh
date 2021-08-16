@@ -1,27 +1,21 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { getSession } from "next-auth/client";
-import { mongooseProjectModel } from "../../../../models/Project";
-import dbConnect from "../../../../utils/mongodb";
+import { mongooseProjectModel } from "../../../../../../models/Project";
 
 export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse<any>
 ) {
     const { username, title } = req.query;
-    console.log("query ", req.query);
 
-    if (!username && !title) {
-        res.status(400).send("Bad request: missing parameters: username title");
-        return;
-    } else if (!username && title) {
+    if (!username) {
         res.status(400).send("Bad request: missing parameters: username");
-        return;
-    } else if (username && !title) {
-        res.status(400).send("Bad request: missing parameters: title");
         return;
     }
 
-    await dbConnect();
+    if (!title) {
+        res.status(400).send("Bad request: missing parameters: title");
+        return;
+    }
 
     const project = await mongooseProjectModel.findOne({
         ownerUsername: username,
@@ -29,10 +23,9 @@ export default async function handler(
     });
 
     if (project) {
-        res.status(200).json(JSON.stringify(project));
+        res.status(200).json(JSON.stringify(project, null, 2));
         return;
     } else {
-        res.status(400).end();
-        return;
+        res.status(404).send("Bad request: error getting user's project");
     }
 }

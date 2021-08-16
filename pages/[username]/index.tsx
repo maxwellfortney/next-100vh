@@ -18,7 +18,7 @@ export async function getServerSideProps(context) {
             process.env.NODE_ENV === "production"
                 ? process.env.PROD_URL
                 : "http://localhost:3000"
-        }/api/users/getByUsername/${username}`
+        }/api/users/${username}`
     );
 
     if (res.status === 200) {
@@ -42,7 +42,7 @@ export async function getServerSideProps(context) {
                 image: user.image,
                 followers: user.followers.length,
                 following: user.following.length,
-                projectLikes: user.projectLikes,
+                likedProjects: user.likedProjects,
                 bio: user.bio,
                 isVerified: user.isVerified,
                 createdAt: user.createdAt,
@@ -65,11 +65,11 @@ export default function UserPage({
     image,
     followers,
     following,
-    projectLikes,
+    likedProjects,
     bio,
     isVerified,
     createdAt,
-    menuViewProp,
+    // menuViewProp,
 }) {
     const router = useRouter();
     const [menuView, setMenuView] = useState("projects");
@@ -78,7 +78,7 @@ export default function UserPage({
     const [didFetchUser, setDidFetchUser] = useState(false);
 
     async function getProjects() {
-        const res = await fetch("/api/projects/getProjects/" + username);
+        const res = await fetch("/api/users/" + username + "/projects");
 
         const projects = await res.json();
         console.log(projects);
@@ -99,11 +99,11 @@ export default function UserPage({
         }
     }, [username]);
 
-    useEffect(() => {
-        if (menuViewProp) {
-            setMenuView(menuViewProp);
-        }
-    }, [menuViewProp]);
+    // useEffect(() => {
+    //     if (menuViewProp) {
+    //         setMenuView(menuViewProp);
+    //     }
+    // }, [menuViewProp]);
 
     return (
         <div
@@ -121,7 +121,7 @@ export default function UserPage({
                 image={image}
                 followers={followers}
                 following={following}
-                projectLikes={projectLikes}
+                likedProjects={likedProjects}
                 projects={projects}
                 bio={bio}
                 isVerified={isVerified}

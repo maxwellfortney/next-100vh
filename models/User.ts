@@ -10,7 +10,7 @@ export default class User extends (<any>Adapters.TypeORM.Models.User.model) {
     ) {
         super(name, email, image, emailVerified);
         this.username = null;
-        this.projectLikes = [];
+        this.likedProjects = [];
         this.followers = [];
         this.following = [];
         this.bio = null;
@@ -31,7 +31,12 @@ export const UserSchema = {
             default: null,
             unique: true,
         },
-        projectLikes: {
+        likedProjects: {
+            type: "array",
+            default: [],
+            array: true,
+        },
+        projectCommentLikes: {
             type: "array",
             default: [],
             array: true,
@@ -86,8 +91,13 @@ export const mongooseUserSchema = new mongoose.Schema(
             default: null,
             unique: true,
         },
-        projectLikes: {
+        likedProjects: {
             type: [Object],
+            default: [],
+        },
+        projectCommentLikes: {
+            type: [Object],
+            default: [],
         },
         followers: {
             type: [Object],

@@ -10,9 +10,7 @@ export async function getServerSideProps(context) {
         };
     }
 
-    const res = await fetch(
-        "/api/users/getByUsername/" + (session?.user as any).username
-    );
+    const res = await fetch("/api/users/" + (session?.user as any).username);
 
     if (res.status === 200) {
         return {

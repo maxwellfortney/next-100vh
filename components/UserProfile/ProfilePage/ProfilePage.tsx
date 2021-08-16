@@ -17,7 +17,7 @@ export default function ProfilePage({
     image,
     followers,
     following,
-    projectLikes,
+    likedProjects,
     projects,
     bio,
     isVerified,
@@ -38,19 +38,18 @@ export default function ProfilePage({
     async function fetchDoesFollow() {
         if (!didFetchDoesFollow) {
             const res = await fetch(
-                `/api/users/doesUserFollowUser/${
+                `/api/users/${
                     (session?.user as any).username
-                }?toUsername=${username}`
+                }/following/${username}`
             );
 
-            if (res.status === 200) {
-                const doesFollowJson = await res.json();
-
-                setDoesFollow(doesFollowJson.doesFollow);
-                setDidFetchDoesFollow(true);
+            if (res.status === 204) {
+                setDoesFollow(true);
             } else {
+                setDoesFollow(false);
                 console.log(res.status);
             }
+            setDidFetchDoesFollow(true);
         }
     }
 
@@ -336,7 +335,7 @@ export default function ProfilePage({
                         </p>
                     </a>
 
-                    {projectLikes && projectLikes.length > 0 && (
+                    {likedProjects && likedProjects.length > 0 && (
                         <a
                             onClick={() => {
                                 // router.push(
@@ -352,7 +351,7 @@ export default function ProfilePage({
                         >
                             <p className="mr-2">liked projects</p>
                             <p className="text-transparent mr-7 bg-clip-text bg-gradient-to-br from-100vh-cyan to-100vh-purple">
-                                {projectLikes.length}
+                                {likedProjects.length}
                             </p>
                         </a>
                     )}

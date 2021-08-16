@@ -2,6 +2,8 @@ import "../styles/globals.css";
 import type { AppProps } from "next/app";
 import Head from "next/head";
 import { Provider, useSession } from "next-auth/client";
+import { useRouter } from "next/dist/client/router";
+import { useEffect } from "react";
 
 function MyApp({ Component, pageProps }: AppProps) {
     return (
@@ -37,9 +39,43 @@ function MyApp({ Component, pageProps }: AppProps) {
                 <meta name="msapplication-config" content="browserconfig.xml" />
                 <meta name="theme-color" content="#131313" />
             </Head>
-            <Component {...pageProps} />
+            <Container100VH>
+                <Component {...pageProps} />
+            </Container100VH>
         </Provider>
     );
+}
+
+function Container100VH({ children }) {
+    const [session, loading] = useSession();
+    const router = useRouter();
+
+    // useEffect(() => {
+    //     console.log(session);
+    //     console.log(!loading && session);
+
+    //     if (!loading && session) {
+    //         if (session.user.username === null) {
+    //         }
+    //     }
+    // }, [loading, session]);
+
+    useEffect(() => {
+        console.log(router);
+    }, [router.pathname]);
+
+    if (loading) return null;
+
+    if (
+        session &&
+        session.user.username === null &&
+        router.pathname !== "/signup/new"
+    ) {
+        console.log("user requires username redirecting to /signup/new");
+        router.push("/signup/new");
+    }
+
+    return <>{children}</>;
 }
 
 export default MyApp;

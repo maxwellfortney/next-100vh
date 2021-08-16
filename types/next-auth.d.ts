@@ -7,7 +7,7 @@
 //     interface User {
 //         createdAt: string;
 //         username: string | null;
-//         projectLikes: Array<any>;
+//         likedProjects: Array<any>;
 //         followers: Array<any>;
 //         following: Array<any>;
 //         bio: string | null;

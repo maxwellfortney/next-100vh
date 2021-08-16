@@ -1,9 +1,13 @@
+import { useSession } from "next-auth/client";
+import { createRef } from "react";
 import { useState } from "react";
 import Button100VH from "../../UIKit/Buttons/Button100VH";
 
-export default function NewComment() {
+export default function NewComment({ projectTitle, projectOwnerUsername }) {
     const [comment, setComment] = useState("");
     const [isValid, setIsValid] = useState(false);
+
+    const [session, loading] = useSession();
 
     function handleChange(e) {
         setComment(e.target.value);
@@ -19,27 +23,47 @@ export default function NewComment() {
         }
     }
 
+    async function submitNewComment() {
+        const res = await fetch(
+            `/api/users/${projectOwnerUsername}/projects/${projectTitle}/comments`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    comment: comment,
+                }),
+            }
+        );
+
+        console.log(await res.text());
+        console.log(res.status);
+
+        if (res.status === 204) {
+            setComment("");
+        } else {
+            // failed
+        }
+    }
+
     return (
-        <div className="flex flex-col w-full">
-            <div
-                className="relative flex w-full mt-4"
-                style={{ minHeight: "35px" }}
-            >
-                {/* <div className="absolute inline-block w-full h-full">
-                    
-                </div> */}
-                <textarea
-                    onChange={handleChange}
-                    style={{ minHeight: "35px" }}
-                    placeholder="add a comment ..."
-                    className="w-full max-w-full min-w-0 pt-1 outline-none resize-y bg-100vh-gray overfl"
-                />
-            </div>
+        <div className="flex flex-col w-full mt-4">
+            <textarea
+                onChange={handleChange}
+                value={comment}
+                placeholder="add a comment ..."
+                style={{
+                    minHeight: comment.length > 0 ? "75px" : "35px",
+                    maxHeight: comment.length > 0 ? "" : "35px",
+                }}
+                className="w-full h-full max-w-full min-w-0 pt-1 outline-none resize-y bg-100vh-gray overfl"
+            />
 
             <div
                 className={`flex items-center transition-opacity justify-between w-full text-sm ${
                     comment.length > 0
-                        ? "visible opacity-100 h-full mt-2"
+                        ? "visible opacity-100 mt-2"
                         : "invisible opacity-0 h-0"
                 }`}
             >
@@ -57,6 +81,7 @@ export default function NewComment() {
                     }`}
                     borderWidth={2}
                     disabled={!isValid}
+                    onClick={submitNewComment}
                 />
             </div>
         </div>

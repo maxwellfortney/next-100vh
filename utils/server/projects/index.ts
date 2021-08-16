@@ -2,39 +2,61 @@ import { mongooseUserModel } from "../../../models/User";
 import { mongooseProjectModel } from "../../../models/Project";
 import { ObjectId } from "mongodb";
 
-export async function addLikeToUser(username: string, projectId: string) {
+export async function addLikeToUser(
+    username: string,
+    projectOwnerUsername: string,
+    projectTitle: string
+) {
     try {
-        await mongooseUserModel.findOneAndUpdate(
+        return await mongooseUserModel.findOneAndUpdate(
             {
                 username,
             },
             {
                 $push: {
-                    projectLikes: {
-                        projectId: new ObjectId(projectId as string),
+                    likedProjects: {
+                        projectTitle,
+                        projectOwnerUsername,
                         createdAt: new Date(),
                     },
                 },
             }
         );
-        return true;
     } catch (e) {
         return false;
     }
 }
 
-export async function removeLikeFromUser(username: string, projectId: string) {
+export async function removeLikeFromUser(
+    username: string,
+    projectOwnerUsername: string,
+    projectTitle: string
+) {
     try {
-        await mongooseUserModel.findOneAndUpdate(
+        return await mongooseUserModel.findOneAndUpdate(
             {
                 username,
             },
             {
                 $pull: {
-                    projectLikes: {
-                        projectId: new ObjectId(projectId as string),
+                    likedProjects: {
+                        projectTitle,
+                        projectOwnerUsername,
                     },
                 },
+            }
+        );
+    } catch (e) {
+        return false;
+    }
+}
+
+export async function removeLikeFromProject(project: any) {
+    try {
+        await mongooseProjectModel.findOneAndUpdate(
+            { ownerUsername: project.ownerUsername, title: project.title },
+            {
+                $inc: { likes: -1 },
             }
         );
         return true;
@@ -43,22 +65,14 @@ export async function removeLikeFromUser(username: string, projectId: string) {
     }
 }
 
-export async function removeLikeFromProject(projectId: string) {
+export async function addLikeToProject(project: any) {
     try {
-        await mongooseProjectModel.findByIdAndUpdate(projectId, {
-            $inc: { likes: -1 },
-        });
-        return true;
-    } catch (e) {
-        return false;
-    }
-}
-
-export async function addLikeToProject(projectId: string) {
-    try {
-        await mongooseProjectModel.findByIdAndUpdate(projectId, {
-            $inc: { likes: 1 },
-        });
+        await mongooseProjectModel.findOneAndUpdate(
+            { ownerUsername: project.ownerUsername, title: project.title },
+            {
+                $inc: { likes: 1 },
+            }
+        );
         return true;
     } catch (e) {
         return false;

@@ -11,7 +11,7 @@ export default function LikedProjects() {
     const [projects, setProjects] = useState<Array<any>>([]);
 
     async function getProjects() {
-        const res = await fetch("/api/projects/getProjects/" + username);
+        const res = await fetch("/api/" + username + "/projects");
 
         if (res.status === 200) {
             const projects = await res.json();

@@ -110,7 +110,11 @@ export async function unfollowUser(myUsername: string, toUsername: string) {
     );
 }
 
-export async function getUserByUsername(username: string) {
-    const user = await mongooseUserModel.findOne({ username }).exec();
-    return user.toObject();
+export async function getUserByUsername(
+    username: string,
+    filter: any = undefined,
+    query: any = undefined
+) {
+    const user = await mongooseUserModel.findOne({ username }, filter, query);
+    return user;
 }

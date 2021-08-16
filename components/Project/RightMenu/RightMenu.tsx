@@ -5,6 +5,7 @@ import { useState } from "react";
 import { doesUserLikeProject } from "../../../utils/client/projects";
 import Box100VH from "../../UIKit/Boxes/Box100VH";
 import Button100VH from "../../UIKit/Buttons/Button100VH";
+import Comments from "./Comments/Comments";
 import NewComment from "./NewComment";
 
 export default function RightMenu({ project }) {
@@ -18,14 +19,15 @@ export default function RightMenu({ project }) {
         if (didFetchIsLiked) {
             //toggle the like
             const res = await fetch(
-                `/api/projects/setUserLikesProject/${project._id}?shouldLike=${
-                    isLiked ? "false" : "true"
-                }`
+                `/api/users/${project.ownerUsername}/projects/${project.title}/likes`,
+                {
+                    method: isLiked ? "DELETE" : "POST",
+                }
             );
 
             console.log(await res.text());
 
-            if (res.status === 200) {
+            if (res.status === 204) {
                 setLikesState(likesState + (isLiked ? -1 : 1));
                 setIsLiked(!isLiked);
             }
@@ -36,7 +38,8 @@ export default function RightMenu({ project }) {
         if (!didFetchIsLiked) {
             const doesLike = await doesUserLikeProject(
                 (session?.user as any).username,
-                project._id
+                project.ownerUsername,
+                project.title
             );
             setIsLiked(doesLike);
             setDidFetchIsLiked(true);
@@ -53,7 +56,7 @@ export default function RightMenu({ project }) {
         <div className="flex flex-col w-full px-3 text-base">
             <div className="flex items-center justify-between w-full mb-7">
                 <svg
-                    className="h-8 transition-opacity cursor-pointer hover:opacity-60"
+                    className="transition-opacity cursor-pointer h-7 hover:opacity-60"
                     viewBox="0 0 20 20"
                 >
                     <defs>
@@ -75,7 +78,7 @@ export default function RightMenu({ project }) {
                     />
                 </svg>
 
-                <p className="transition-opacity cursor-pointer hover:opacity-60">
+                <p className="text-base transition-opacity cursor-pointer hover:opacity-60">
                     •••
                 </p>
             </div>
@@ -114,7 +117,12 @@ export default function RightMenu({ project }) {
                     </div>
                 </div>
             </div>
-            <NewComment />
+            <NewComment
+                projectTitle={project.title}
+                projectOwnerUsername={project.ownerUsername}
+            />
+
+            <Comments project={project} />
         </div>
     );
 

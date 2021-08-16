@@ -15,7 +15,7 @@ export default function Projects() {
     const [projects, setProjects] = useState<Array<any>>([]);
 
     async function getProjects() {
-        const res = await fetch("/api/projects/getProjects/" + username);
+        const res = await fetch("/api/users/" + username + "/projects");
 
         const projects = await res.json();
         console.log(projects);

@@ -1,4 +1,4 @@
-import { getSession, signIn, useSession } from "next-auth/client";
+import { getSession, signIn, signOut, useSession } from "next-auth/client";
 import { useRouter } from "next/dist/client/router";
 import Link from "next/link";
 import { useEffect } from "react";
@@ -118,12 +118,21 @@ export default function New() {
 
     return (
         <div className="flex flex-col items-center justify-center w-full min-h-screen bg-100vh-gray">
-            <div className="flex mt-8" style={{ width: "95%" }}>
+            <div
+                className="flex items-center justify-between mt-8"
+                style={{ width: "95%" }}
+            >
                 <Link href="/">
                     <a className="text-5xl font-black text-transparent transition-opacity duration-300 md:text-6xl hover:opacity-40 bg-clip-text bg-gradient-to-br from-100vh-cyan to-100vh-purple">
                         100vh
                     </a>
                 </Link>
+                <button
+                    onClick={() => signOut({ callbackUrl: "/" })}
+                    className="flex items-center px-2 py-2 font-bold text-white transition-colors border-2 border-red-600 hover:bg-red-600"
+                >
+                    <p>cancel</p>
+                </button>
             </div>
             <div className="flex flex-col items-center justify-start flex-1 w-11/12 px-2 text-white">
                 <h1 className="self-start w-11/12 mt-20 text-6xl font-extrabold md:w-3/4 xl:w-1/2 lg:text-7xl">
