@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "next-auth/client";
 import { mongooseProjectCommentModel } from "../../../../../../../models/ProjectComment";
 import dbConnect from "../../../../../../../utils/mongodb";
+import { errorMessage } from "../../../../../../../utils/server";
 
 export default async function handler(
   req: NextApiRequest,
@@ -10,19 +11,24 @@ export default async function handler(
   const { username, title, perPage = 100, page = 0, sort } = req.query;
 
   if (!username) {
-    res.status(400).send("Bad request: missing parameters: username");
+    res.status(400).json(errorMessage("Missing parameters: username"));
     return;
   }
 
   if (!title) {
-    res.status(400).send("Bad request: missing parameters: title");
+    res.status(400).json(errorMessage("Missing parameters: title"));
     return;
   }
 
   if (parseInt(perPage as any) > 100 || parseInt(perPage as any) < 1) {
     res
       .status(400)
-      .send("Bad request: perPage can't be greater than 100 or less than 1");
+      .json(errorMessage("perPage can't be greater than 100 or less than 1"));
+    return;
+  }
+
+  if (parseInt(page as any) < 0) {
+    res.status(400).json(errorMessage("page can't be below 0"));
     return;
   }
 
@@ -35,7 +41,7 @@ export default async function handler(
       console.log(comment);
 
       if (!comment) {
-        res.status(400).send(`Bad request: body missing comment`);
+        res.status(400).json(errorMessage("Missing comment in body"));
         return;
       }
 
@@ -58,7 +64,7 @@ export default async function handler(
         return;
       }
     } else {
-      res.status(401).send("error adding comment: not signed in");
+      res.status(401).json(errorMessage("Unauthorized request: not signed in"));
     }
   } else {
     const comments = await mongooseProjectCommentModel.find(
@@ -81,7 +87,7 @@ export default async function handler(
       res.status(200).json(JSON.stringify(comments, null, 2));
       return;
     } else {
-      res.status(404).send("Bad request: error getting projects comments");
+      res.status(404).json(errorMessage("Error getting projects comments"));
     }
   }
 }

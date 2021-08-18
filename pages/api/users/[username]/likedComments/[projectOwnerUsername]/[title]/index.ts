@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { mongooseUserModel } from "../../../../../../../models/User";
 import dbConnect from "../../../../../../../utils/mongodb";
+import { errorMessage } from "../../../../../../../utils/server";
 
 export default async function handler(
   req: NextApiRequest,
@@ -15,13 +16,13 @@ export default async function handler(
   } = req.query;
 
   if (!username) {
-    res.status(400).send("Bad request: missing parameters: username");
+    res.status(400).json(errorMessage("Missing parameters: username"));
     return;
   }
   if (!projectOwnerUsername) {
     res
       .status(400)
-      .send("Bad request: missing parameters: projectOwnerUsername");
+      .json(errorMessage("Missing parameters: projectOwnerUsername"));
     return;
   }
   if (!title) {
@@ -51,13 +52,23 @@ export default async function handler(
         like.projectTitle == title
     );
 
+    likedComments = likedComments.slice(
+      parseInt(page as any) * parseInt(perPage as any),
+      parseInt(page as any) * parseInt(perPage as any) +
+        parseInt(perPage as any)
+    );
+
     if (likedComments.length > 0) {
-      res.status(200).json(JSON.stringify(likedComments[0], null, 2));
+      res.status(200).json(JSON.stringify(likedComments, null, 2));
       return;
     } else {
-      res.status(404).send("user doesn't like project from user");
+      res
+        .status(404)
+        .json(errorMessage("User doesn't like project from otherUser"));
+      return;
     }
   } else {
-    res.status(404).send("Bad request: error getting user");
+    res.status(404).json(errorMessage("User doesn't exists"));
+    return;
   }
 }

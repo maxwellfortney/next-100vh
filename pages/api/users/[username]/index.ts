@@ -1,5 +1,25 @@
+/**
+ * @swagger
+ * /api/users/{username}:
+ *   parameters:
+ *     - name: username
+ *       in: path
+ *       description: username of user
+ *       required: true
+ *       schema:
+ *         type: string
+ *   get:
+ *     description: Returns a single 100vh user by username
+ *     responses:
+ *       200:
+ *         description: Returns a single 100vh user object
+ *       404:
+ *         description: User does not exist
+ */
+
 import type { NextApiRequest, NextApiResponse } from "next";
 import dbConnect from "../../../../utils/mongodb";
+import { errorMessage } from "../../../../utils/server";
 import { getUserByUsername } from "../../../../utils/server/user";
 
 export default async function handler(
@@ -9,7 +29,7 @@ export default async function handler(
   const { username, followers, following } = req.query;
 
   if (!username) {
-    res.status(400).send("Bad request: missing parameters: username");
+    res.status(400).json(errorMessage("Missing parameters: username"));
     return;
   }
 
@@ -21,6 +41,7 @@ export default async function handler(
     res.status(200).json(JSON.stringify(user, null, 2));
     return;
   } else {
-    res.status(404).send("Bad request: user doesn't exist");
+    res.status(404).json(errorMessage("User doesn't exists"));
+    return;
   }
 }

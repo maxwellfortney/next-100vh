@@ -3,6 +3,7 @@ import { getSession } from "next-auth/client";
 import { mongooseProjectModel } from "../../../../../../../models/Project";
 import { doesUserLikeProject } from "../../../../../../../utils/client/projects";
 import dbConnect from "../../../../../../../utils/mongodb";
+import { errorMessage } from "../../../../../../../utils/server";
 import {
   addLikeToUser,
   removeLikeFromUser,
@@ -15,19 +16,23 @@ export default async function handler(
   const { username, title, perPage = 100, page = 0 } = req.query;
 
   if (!username) {
-    res.status(400).send("Bad request: missing parameters: username");
+    res.status(400).json(errorMessage("Missing parameters: username"));
     return;
   }
-
   if (!title) {
-    res.status(400).send("Bad request: missing parameters: title");
+    res.status(400).json(errorMessage("Missing parameters: title"));
     return;
   }
 
   if (parseInt(perPage as any) > 100 || parseInt(perPage as any) < 1) {
     res
       .status(400)
-      .send("Bad request: perPage can't be greater than 100 or less than 1");
+      .json(errorMessage("perPage can't be greater than 100 or less than 1"));
+    return;
+  }
+
+  if (parseInt(page as any) < 0) {
+    res.status(400).json(errorMessage("page can't be below 0"));
     return;
   }
 
@@ -46,7 +51,9 @@ export default async function handler(
       console.log("doesLike ", doesLike);
 
       if (doesLike) {
-        res.status(400).send("user already likes this project");
+        res
+          .status(400)
+          .json(errorMessage("Can't add like when user already likes"));
         return;
       }
 
@@ -70,14 +77,16 @@ export default async function handler(
           res.status(204).send("Added like to project");
           return;
         } else {
-          res.status(400).send("Bad request: error adding like to user");
+          res.status(400).json(errorMessage("Error adding like to user"));
           return;
         }
       } else {
-        res.status(400).send("Bad request: error adding like to project");
+        res.status(400).json(errorMessage("Error adding like to project"));
+        return;
       }
     } else {
-      res.status(401).send("Bad request: must be signed in");
+      res.status(401).json(errorMessage("Unauthorized request: not signed in"));
+      return;
     }
   } else if (req.method === "DELETE") {
     const session = await getSession({ req });
@@ -92,7 +101,11 @@ export default async function handler(
       console.log("doesLike ", doesLike);
 
       if (!doesLike) {
-        res.status(400).send("user already doesn't like this project");
+        res
+          .status(400)
+          .json(
+            errorMessage("Can't remove like when user doesn't already like")
+          );
         return;
       }
 
@@ -116,14 +129,14 @@ export default async function handler(
           res.status(204).send("Removed like from project");
           return;
         } else {
-          res.status(400).send("Bad request: error removing like from user");
+          res.status(400).json(errorMessage("Error removing like from user"));
           return;
         }
       } else {
-        res.status(400).send("Bad request: error removing like from project");
+        res.status(400).json(errorMessage("Error removing like from project"));
       }
     } else {
-      res.status(401).send("Bad request: must be signed in");
+      res.status(401).json(errorMessage("Unauthorized request: not signed in"));
     }
   } else {
     const project = await mongooseProjectModel.findOne(
@@ -138,7 +151,7 @@ export default async function handler(
       res.status(200).json(JSON.stringify({ likes: project.likes }, null, 2));
       return;
     } else {
-      res.status(404).send("Bad request: error getting project");
+      res.status(404).json(errorMessage("Error getting project"));
     }
   }
 }

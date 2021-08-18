@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "next-auth/client";
 
 import dbConnect from "../../../../utils/mongodb";
+import { errorMessage } from "../../../../utils/server";
 import { unfollowUser } from "../../../../utils/server/user";
 
 export default async function handler(
@@ -13,12 +14,12 @@ export default async function handler(
   const session = await getSession({ req });
 
   if (!session) {
-    res.status(401).send("Unauthorized request: no session");
+    res.status(401).json(errorMessage("Unauthorized request: no session"));
     return;
   }
 
   if (!username) {
-    res.status(400).send("Bad request: missing parameters: username");
+    res.status(400).json(errorMessage("Missing parameters: username"));
     return;
   }
 

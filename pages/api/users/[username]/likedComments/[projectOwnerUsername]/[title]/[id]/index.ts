@@ -1,41 +1,32 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { mongooseUserModel } from "../../../../../../../../models/User";
 import dbConnect from "../../../../../../../../utils/mongodb";
+import { errorMessage } from "../../../../../../../../utils/server";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<any>
 ) {
-  const {
-    username,
-    title,
-    projectOwnerUsername,
-    id,
-    perPage = 35,
-    page = 0,
-  } = req.query;
+  const { username, title, projectOwnerUsername, id } = req.query;
 
   if (!username) {
-    res.status(400).send("Bad request: missing parameters: username");
+    res.status(400).json(errorMessage("Missing parameters: username"));
     return;
   }
   if (!projectOwnerUsername) {
     res
       .status(400)
-      .send("Bad request: missing parameters: projectOwnerUsername");
-    return;
-  }
-  if (!title) {
-    res.status(400).send("Bad request: missing parameters: title");
-    return;
-  }
-  if (!id) {
-    res.status(400).send("Bad request: missing parameters: id");
+      .json(errorMessage("Missing parameters: projectOwnerUsername"));
     return;
   }
 
-  if (parseInt(perPage as any) > 100) {
-    res.status(400).send("Bad request: perPage must be under 100");
+  if (!title) {
+    res.status(400).json(errorMessage("Missing parameters: title"));
+    return;
+  }
+
+  if (!id) {
+    res.status(400).json(errorMessage("Missing parameters: id"));
     return;
   }
 
@@ -57,12 +48,6 @@ export default async function handler(
         like.commentId == id
     );
 
-    likedComments = likedComments.slice(
-      parseInt(page as any) * parseInt(perPage as any),
-      parseInt(page as any) * parseInt(perPage as any) +
-        parseInt(perPage as any)
-    );
-
     if (likedComments.length > 0) {
       res.status(200).json(JSON.stringify(likedComments[0], null, 2));
       return;
@@ -70,6 +55,7 @@ export default async function handler(
       res.status(404).send("user doesnt like this comment");
     }
   } else {
-    res.status(404).send("Bad request: error getting user");
+    res.status(404).json(errorMessage("User doesn't exists"));
+    return;
   }
 }

@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { mongooseProjectModel } from "../../../../../models/Project";
 import dbConnect from "../../../../../utils/mongodb";
+import { errorMessage } from "../../../../../utils/server";
 
 export default async function handler(
   req: NextApiRequest,
@@ -9,14 +10,19 @@ export default async function handler(
   const { username, perPage = 35, page = 0 } = req.query;
 
   if (!username) {
-    res.status(400).send("Bad request: missing parameters: username");
+    res.status(400).json(errorMessage("Missing parameters: username"));
     return;
   }
 
-  if (parseInt(perPage as any) > 35 || parseInt(perPage as any) < 1) {
+  if (parseInt(perPage as any) > 100 || parseInt(perPage as any) < 1) {
     res
       .status(400)
-      .send("Bad request: perPage can't be greater than 35 or less than 1");
+      .json(errorMessage("perPage can't be greater than 100 or less than 1"));
+    return;
+  }
+
+  if (parseInt(page as any) < 0) {
+    res.status(400).json(errorMessage("page can't be below 0"));
     return;
   }
 
@@ -37,6 +43,6 @@ export default async function handler(
     res.status(200).json(JSON.stringify(projects, null, 2));
     return;
   } else {
-    res.status(400).send("Bad request: error getting user's projects");
+    res.status(400).json(errorMessage("Error getting user's projects"));
   }
 }

@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { mongooseUserModel } from "../../../../../../models/User";
 import dbConnect from "../../../../../../utils/mongodb";
+import { errorMessage } from "../../../../../../utils/server";
 
 export default async function handler(
   req: NextApiRequest,
@@ -9,18 +10,25 @@ export default async function handler(
   const { username, projectOwnerUsername, perPage = 35, page = 0 } = req.query;
 
   if (!username) {
-    res.status(400).send("Bad request: missing parameters: username");
+    res.status(400).json(errorMessage("Missing parameters: username"));
     return;
   }
   if (!projectOwnerUsername) {
     res
       .status(400)
-      .send("Bad request: missing parameters: projectOwnerUsername");
+      .json(errorMessage("Missing parameters: projectOwnerUsername"));
     return;
   }
 
-  if (parseInt(perPage as any) > 100) {
-    res.status(400).send("Bad request: perPage must be under 100");
+  if (parseInt(perPage as any) > 100 || parseInt(perPage as any) < 1) {
+    res
+      .status(400)
+      .json(errorMessage("perPage can't be greater than 100 or less than 1"));
+    return;
+  }
+
+  if (parseInt(page as any) < 0) {
+    res.status(400).json(errorMessage("page can't be below 0"));
     return;
   }
 
@@ -49,9 +57,10 @@ export default async function handler(
       res.status(200).json(JSON.stringify(likedProjects, null, 2));
       return;
     } else {
-      res.status(404).send("user doesnt like any projects from otherUser");
+      res.status(404).json("User doesnt like any projects from otherUser");
     }
   } else {
-    res.status(404).send("Bad request: error getting user");
+    res.status(404).json(errorMessage("User doesn't exists"));
+    return;
   }
 }

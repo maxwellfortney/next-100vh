@@ -3,6 +3,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "next-auth/client";
 import { mongooseProjectCommentModel } from "../../../../../../../../models/ProjectComment";
 import dbConnect from "../../../../../../../../utils/mongodb";
+import { errorMessage } from "../../../../../../../../utils/server";
 
 export default async function handler(
   req: NextApiRequest,
@@ -11,24 +12,29 @@ export default async function handler(
   const { username, title, id, perPage = 100, page = 0, sort } = req.query;
 
   if (!username) {
-    res.status(400).send("Bad request: missing parameters: username");
+    res.status(400).json(errorMessage("Missing parameters: username"));
     return;
   }
 
   if (!title) {
-    res.status(400).send("Bad request: missing parameters: title");
+    res.status(400).json(errorMessage("Missing parameters: title"));
     return;
   }
 
   if (!id) {
-    res.status(400).send("Bad request: missing parameters: id");
+    res.status(400).json(errorMessage("Missing parameters: id"));
     return;
   }
 
   if (parseInt(perPage as any) > 100 || parseInt(perPage as any) < 1) {
     res
       .status(400)
-      .send("Bad request: perPage can't be greater than 100 or less than 1");
+      .json(errorMessage("perPage can't be greater than 100 or less than 1"));
+    return;
+  }
+
+  if (parseInt(page as any) < 0) {
+    res.status(400).json(errorMessage("page can't be below 0"));
     return;
   }
 
@@ -40,14 +46,14 @@ export default async function handler(
       new ObjectId(id as string)
     );
   } catch (e) {
-    res.status(404).send("Bad request: no comment with id found");
+    res.status(404).json(errorMessage("No comment with id found"));
     return;
   }
 
   console.log("comment ", comment);
 
   if (!comment) {
-    res.status(404).send("Bad request: no comment with id found");
+    res.status(404).json(errorMessage("No comment with id found"));
     return;
   }
 
@@ -58,7 +64,7 @@ export default async function handler(
       if (session.user.username != comment.commentOwnerUsername) {
         res
           .status(400)
-          .send(`Bad request: cannot remove someone else's comment`);
+          .json(errorMessage("Can't remove someone else's comment"));
         return;
       } else {
         const removed = await mongooseProjectCommentModel.findByIdAndDelete(
@@ -68,11 +74,13 @@ export default async function handler(
         if (removed) {
           res.status(204).send("removed comment from project");
         } else {
-          res.status(400).send("failed to remove comment from project");
+          res
+            .status(400)
+            .json(errorMessage("Failed to remove comment from project"));
         }
       }
     } else {
-      res.status(401).send("error adding comment: not signed in");
+      res.status(401).json(errorMessage("Unauthorized request: not signed in"));
     }
   } else {
     res.status(200).json(JSON.stringify(comment, null, 2));

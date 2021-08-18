@@ -1,7 +1,39 @@
+/**
+ * @swagger
+ * /api/users/{username}/likedComments:
+ *   parameters:
+ *     - name: username
+ *       in: path
+ *       description: username of user
+ *       required: true
+ *       schema:
+ *         type: string
+ *     - name: perPage
+ *       in: query
+ *       schema:
+ *         type: integer
+ *         minimum: 1
+ *         maximum: 100
+ *     - name: page
+ *       in: query
+ *       schema:
+ *         type: integer
+ *         minimum: 0
+ *   get:
+ *     description: Returns the followers of a 100vh user
+ *     responses:
+ *       200:
+ *         description: Returns an array of those following a 100vh user
+ *       400:
+ *         description: Invalid parameters
+ *       404:
+ *         description: User does not exist
+ */
+
 import type { NextApiRequest, NextApiResponse } from "next";
-import { mongooseProjectModel } from "../../../../../models/Project";
 import { mongooseUserModel } from "../../../../../models/User";
 import dbConnect from "../../../../../utils/mongodb";
+import { errorMessage } from "../../../../../utils/server";
 
 export default async function handler(
   req: NextApiRequest,
@@ -10,12 +42,19 @@ export default async function handler(
   const { username, perPage = 35, page = 0 } = req.query;
 
   if (!username) {
-    res.status(400).send("Bad request: missing parameters: username");
+    res.status(400).json(errorMessage("Missing parameters: username"));
     return;
   }
 
-  if (parseInt(perPage as any) > 100) {
-    res.status(400).send("Bad request: perPage must be under 100");
+  if (parseInt(perPage as any) > 100 || parseInt(perPage as any) < 1) {
+    res
+      .status(400)
+      .json(errorMessage("perPage can't be greater than 100 or less than 1"));
+    return;
+  }
+
+  if (parseInt(page as any) < 0) {
+    res.status(400).json(errorMessage("page can't be below 0"));
     return;
   }
 
@@ -28,15 +67,21 @@ export default async function handler(
     "likedComments"
   );
 
-  const likedComments = user.likedComments.slice(
-    parseInt(page as any) * parseInt(perPage as any),
-    parseInt(page as any) * parseInt(perPage as any) + parseInt(perPage as any)
-  );
+  if (user) {
+    const likedComments = user.likedComments.slice(
+      parseInt(page as any) * parseInt(perPage as any),
+      parseInt(page as any) * parseInt(perPage as any) +
+        parseInt(perPage as any)
+    );
 
-  if (likedComments) {
-    res.status(200).json(JSON.stringify(likedComments, null, 2));
-    return;
+    if (likedComments) {
+      res.status(200).json(JSON.stringify(likedComments, null, 2));
+      return;
+    } else {
+      res.status(400).json(errorMessage("Error getting user's liked comments"));
+    }
   } else {
-    res.status(400).send("Bad request: error getting user's followers");
+    res.status(404).json(errorMessage("User doesn't exists"));
+    return;
   }
 }
