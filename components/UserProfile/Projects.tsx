@@ -10,11 +10,14 @@ export default function Projects() {
     const router = useRouter();
     const { username } = router.query;
 
-    const [session, loading] = useSession();
+    const [session] = useSession();
+
+    const [loading, setLoading] = useState(true);
 
     const [projects, setProjects] = useState<Array<any>>([]);
 
     async function getProjects() {
+        setLoading(true);
         const res = await fetch("/api/users/" + username + "/projects");
 
         const projects = await res.json();
@@ -23,24 +26,46 @@ export default function Projects() {
         if (res.status === 200 && projects) {
             setProjects(projects);
         }
+        setLoading(false);
     }
 
     useEffect(() => {
         if (username) {
             getProjects();
+        } else {
+            console.log("no username !!");
         }
-    }, [username]);
+    }, []);
 
     return (
         <div
-            className="grid grid-cols-1 gap-4 2xl:grid-cols-2"
+            className="grid grid-cols-1 gap-4 text-white md:grid-cols-2 2xl:grid-cols-3"
             style={
                 {
                     // gridTemplateColumns: "repeat(auto-fill, minmax(700px, 1fr))",
                 }
             }
         >
-            {projects ? (
+            {loading ? (
+                <div
+                    className="flex items-center justify-center w-full h-full"
+                    style={{ "--aspect-ratio": 16 / 9 } as any}
+                >
+                    <svg className="w-20 animate-spin" viewBox="0 0 100 100">
+                        <circle
+                            fill="none"
+                            cx="50"
+                            cy="50"
+                            r="30"
+                            strokeWidth="4"
+                            stroke="white"
+                            strokeOpacity="0.8"
+                            strokeDasharray="283"
+                            strokeDashoffset="200"
+                        />
+                    </svg>
+                </div>
+            ) : (
                 <>
                     {projects.length > 0 ? (
                         <>
@@ -58,20 +83,19 @@ export default function Projects() {
                                         html={project.html}
                                         css={project.css}
                                         js={project.js}
-                                        i={i}
+                                        iFrameScale={0.5}
                                     />
                                 );
                             })}
                         </>
                     ) : (
                         <>
-                            {session &&
-                            (session.user as any).username == username ? (
+                            {session && session.user.username == username ? (
                                 <Box100VH
                                     isLink={true}
                                     href="/create"
                                     className="flex items-center justify-center cursor-pointer"
-                                    style={{ height: "35vh" }}
+                                    style={{ "--aspect-ratio": 16 / 9 } as any}
                                 >
                                     <svg
                                         className="w-6 h-6 text-white"
@@ -89,8 +113,8 @@ export default function Projects() {
                                 </Box100VH>
                             ) : (
                                 <div
-                                    className="relative flex items-start justify-start w-full mb-4 overflow-hidden font-semibold text-white group"
-                                    style={{ height: "35vh" }}
+                                    className="relative flex items-start justify-start w-full mb-4 overflow-hidden font-semibold text-white opacity-80 group"
+                                    style={{ "--aspect-ratio": 16 / 9 } as any}
                                 >
                                     this user has no projects :(
                                 </div>
@@ -98,7 +122,7 @@ export default function Projects() {
                         </>
                     )}
                 </>
-            ) : null}
+            )}
         </div>
     );
 }

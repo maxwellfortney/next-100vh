@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { useState } from "react";
 import { createRef } from "react";
 import { useContext } from "react";
 import { CreateContext } from "../../pages/create";
@@ -9,9 +10,11 @@ interface CommonProps {
     className?: string;
     onMouseEnter?: Function;
     onMouseLeave?: Function;
+    onMouseMove?: Function;
     style?: Object;
     css?: string;
     scale?: number;
+    onLoad?: Function;
 }
 
 type ConditionalProps =
@@ -26,8 +29,6 @@ type ConditionalProps =
 
 type ProjectIFrame = CommonProps & ConditionalProps;
 
-const IFrameRef = createRef<any>();
-
 export default function ProjectIFrame({
     html,
     css,
@@ -36,8 +37,14 @@ export default function ProjectIFrame({
     className,
     onMouseEnter,
     onMouseLeave,
+    onMouseMove,
     style,
+    onLoad,
 }: ProjectIFrame) {
+    const [generatedURL, setGeneratedURL] = useState<any>(null);
+
+    const IFrameRef = createRef<any>();
+
     function getGeneratedPageURL() {
         const getBlobURL = (code, type) => {
             const blob = new Blob([code], { type });
@@ -62,7 +69,7 @@ export default function ProjectIFrame({
                 </head>
                 <body>
                     <div class="overflow-hidden">
-                        <div id="Project-100vh-Container" class="absolute" style="transform: scale(${scale}); width: ${
+                        <div class="absolute" style="transform: scale(${scale}); width: ${
             100 * (1 / scale)
         }%; height: ${100 * (1 / scale)}%; left: -${
             (100 * (1 / scale) - 100) / 2
@@ -77,15 +84,25 @@ export default function ProjectIFrame({
         return getBlobURL(source, "text/html");
     }
 
+    // Adding html,css, and js as dependencies could possibly add vulnerability
+    useEffect(() => {
+        setGeneratedURL(getGeneratedPageURL());
+    }, []);
+
     return (
         <iframe
             style={style}
             onMouseEnter={onMouseEnter as any}
             onMouseLeave={onMouseLeave as any}
+            onMouseMove={onMouseMove as any}
             ref={IFrameRef}
-            src={getGeneratedPageURL() || ""}
+            src={generatedURL}
             onLoad={() => {
+                console.log("loaded");
                 IFrameRef.current.classList.add("opacity-100");
+                if (onLoad) {
+                    onLoad();
+                }
             }}
             className={`w-full h-full overflow-hidden opacity-0 transition-opacity duration-300 ${
                 className ? className : ""

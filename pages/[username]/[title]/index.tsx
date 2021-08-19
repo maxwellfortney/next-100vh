@@ -50,11 +50,8 @@ export async function getServerSideProps(context) {
 }
 
 export default function UserPage({ username, title, project }) {
-    const [showMenus, setShowMenus] = useState(true);
-
-    useEffect(() => {
-        console.log(project);
-    }, []);
+    const [showMenus, setShowMenus] = useState(false);
+    const [showButton, setShowButton] = useState(true);
 
     async function setDidView() {
         if ((await addViewToProject(project)) === true) {
@@ -73,6 +70,26 @@ export default function UserPage({ username, title, project }) {
         }
     }, []);
 
+    let timer: any = null;
+
+    // function handleMouseLeave() {
+    //     timer = setTimeout(() => {
+    //         setShowButton(false);
+    //     }, 1000);
+    // }
+
+    // function handleMouseMove(e) {
+    //     setShowButton(true);
+
+    //     if (timer) {
+    //         clearTimeout(timer);
+    //     }
+
+    //     timer = setTimeout(() => {
+    //         setShowButton(false);
+    //     }, 3000);
+    // }
+
     return (
         <div className="flex flex-col items-center justify-center w-screen h-screen text-4xl text-white">
             <TopMenu
@@ -81,12 +98,18 @@ export default function UserPage({ username, title, project }) {
                 project={project}
             />
             <div className="flex w-full h-full">
-                <div className="relative flex justify-center w-full">
-                    <div className="absolute top-0 flex flex-col items-center justify-start">
+                <div
+                    // onMouseEnter={handleMouseEnter}
+
+                    className="relative flex justify-center w-full"
+                >
+                    <div
+                        className="absolute top-0 flex flex-col items-center justify-start w-56 h-12 transition-opacity duration-300 opacity-0 hover:opacity-100"
+                        // onMouseLeave={handleMouseLeave}
+                        // onMouseMove={handleMouseMove}
+                    >
                         <div
-                            className={`flex w-12 h-5 transition-opacity bg-100vh-gray ${
-                                showMenus ? "opacity-0" : "opac opacity-100"
-                            }`}
+                            className={`cursor-pointer flex w-12 h-5 bg-100vh-gray`}
                             onClick={() => {
                                 setShowMenus(!showMenus);
                             }}
@@ -96,6 +119,7 @@ export default function UserPage({ username, title, project }) {
                         html={project.html}
                         css={project.css}
                         js={project.js}
+                        scale={0.9}
                     />
 
                     {/* <div className="flex w-full h-full bg-red-200"></div> */}

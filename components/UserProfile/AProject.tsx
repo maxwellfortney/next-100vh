@@ -22,7 +22,7 @@ export interface AProjectType {
     html: string;
     css: string;
     js: string;
-    i: number;
+    iFrameScale?: number;
 }
 
 export default function AProject({
@@ -36,9 +36,11 @@ export default function AProject({
     html,
     css,
     js,
-    i,
+    iFrameScale = 1,
 }: AProjectType) {
-    const [session, loading] = useSession();
+    const [session] = useSession();
+
+    const [loading, setLoading] = useState(true);
     const [isHovering, setIsHovering] = useState(false);
 
     const [didFetchIsLiked, setDidFetchIsLiked] = useState(false);
@@ -88,34 +90,65 @@ export default function AProject({
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={() => setIsHovering(false)}
                 className={`group relative flex w-full overflow-hidden mb-4`}
-                style={{ height: "35vh" }}
+                style={{ "--aspect-ratio": 16 / 9 } as any}
             >
-                <div className="absolute bottom-0 flex items-center justify-end w-full transition-opacity duration-300 opacity-0 h-1/4 bg-gradient-to-t from-black to-transparent group-hover:opacity-60"></div>
-                <div
-                    className="absolute bottom-0 flex items-center justify-center w-full transition-opacity duration-300 opacity-0 h-1/4 group-hover:opacity-100"
-                    style={{ zIndex: 1 }}
-                >
-                    <Link href={`/${ownerUsername}/${title}`}>
-                        <a className="flex items-center justify-between w-11/12 h-full text-2xl text-white">
-                            <div className="flex items-center flex-1 font-bold">
-                                <p>{title}</p>
-                                <p className="ml-3 text-sm font-normal">
-                                    <ReactTimeAgo
-                                        date={new Date(createdAt)}
-                                        locale="en-US"
-                                    />
-                                </p>
-                            </div>
-                            <div className="flex items-center">
-                                <AnimatedHeart isLiked={isLiked} />
-                                <p className="ml-2 text-sm font-normal">
-                                    {likesState}
-                                </p>
-                            </div>
-                        </a>
-                    </Link>
-                </div>
-                <ProjectIFrame html={html} css={css} js={js} scale={0.5} />
+                {loading ? (
+                    <div className="absolute top-0 left-0 flex items-center justify-center w-full h-full">
+                        <svg
+                            className="w-20 animate-spin"
+                            viewBox="0 0 100 100"
+                        >
+                            <circle
+                                fill="none"
+                                cx="50"
+                                cy="50"
+                                r="30"
+                                strokeWidth="4"
+                                stroke="white"
+                                strokeOpacity="0.8"
+                                strokeDasharray="283"
+                                strokeDashoffset="200"
+                            />
+                        </svg>
+                    </div>
+                ) : (
+                    <>
+                        <div className="absolute bottom-0 flex items-center justify-end w-full transition-opacity duration-300 opacity-0 h-1/4 bg-gradient-to-t from-black to-transparent group-hover:opacity-60"></div>
+                        <div
+                            className="absolute bottom-0 flex items-center justify-center w-full transition-opacity duration-300 opacity-0 h-1/4 group-hover:opacity-100"
+                            style={{ zIndex: 1 }}
+                        >
+                            <Link href={`/${ownerUsername}/${title}`}>
+                                <a className="flex items-center justify-between w-11/12 h-full text-2xl text-white">
+                                    <div className="flex items-center flex-1 font-bold">
+                                        <p>{title}</p>
+                                        <p className="ml-3 text-sm font-normal">
+                                            <ReactTimeAgo
+                                                date={new Date(createdAt)}
+                                                locale="en-US"
+                                            />
+                                        </p>
+                                    </div>
+                                    <div className="flex items-center">
+                                        <AnimatedHeart isLiked={isLiked} />
+                                        <p className="ml-2 text-sm font-normal">
+                                            {likesState}
+                                        </p>
+                                    </div>
+                                </a>
+                            </Link>
+                        </div>
+                    </>
+                )}
+                <ProjectIFrame
+                    html={html}
+                    css={css}
+                    js={js}
+                    scale={iFrameScale}
+                    onLoad={() => {
+                        setLoading(false);
+                    }}
+                />
             </div>
         </>
     );
