@@ -92,6 +92,11 @@ export default function UserPage({ username, title, project }) {
 
     return (
         <div className="flex flex-col items-center justify-center w-screen h-screen text-4xl text-white">
+            <Head>
+                <title>
+                    {project.title} by {project.ownerUsername} | 100vh
+                </title>
+            </Head>
             <TopMenu
                 showMenus={showMenus}
                 setShowMenus={setShowMenus}

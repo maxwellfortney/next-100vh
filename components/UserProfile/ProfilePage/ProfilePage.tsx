@@ -7,7 +7,10 @@ import { useEffect } from "react";
 import Button100VH from "../../UIKit/Buttons/Button100VH";
 import Text100VH from "../../UIKit/Text/Text100VH";
 import About from "../About";
+import Followers from "../Followers";
+import Following from "../Following";
 import LikedProjects from "../LikedProjects";
+import ModalBackground from "../ModalBackground/ModalBackground";
 import ProfileImage from "../ProfileImage";
 import Projects from "../Projects";
 
@@ -35,6 +38,9 @@ export default function ProfilePage({
 
     const [followersOffset, setFollowersOffset] = useState(0);
 
+    const [showFollowers, setShowFollowers] = useState(false);
+    const [showFollowing, setShowFollowing] = useState(false);
+
     async function fetchDoesFollow() {
         if (!didFetchDoesFollow) {
             const res = await fetch(
@@ -43,7 +49,7 @@ export default function ProfilePage({
                 }/following/${username}`
             );
 
-            if (res.status === 204) {
+            if (res.status === 200) {
                 const resJson = await res.json();
                 setDoesFollow(resJson.isFollowing);
             } else {
@@ -153,7 +159,10 @@ export default function ProfilePage({
 
     function FollowersCounter() {
         return (
-            <a className="flex items-center pb-1 mt-1 text-xl transition-colors duration-300 border-b-2 border-transparent cursor-pointer hover:border-white">
+            <a
+                onClick={() => setShowFollowers(true)}
+                className="flex items-center pb-1 mt-1 text-xl transition-colors duration-300 border-b-2 border-transparent cursor-pointer hover:border-white"
+            >
                 <p className="font-bold">
                     {abbreviateNumber(followers + followersOffset, 1, {
                         symbols: ["", "k", "m", "g", "t", "p", "e"],
@@ -168,7 +177,10 @@ export default function ProfilePage({
 
     function FollowingCounter() {
         return (
-            <a className="flex items-center pb-1 mt-1 ml-2 text-xl transition-colors duration-300 border-b-2 border-transparent cursor-pointer hover:border-white">
+            <a
+                onClick={() => setShowFollowing(true)}
+                className="flex items-center pb-1 mt-1 ml-2 text-xl transition-colors duration-300 border-b-2 border-transparent cursor-pointer hover:border-white"
+            >
                 <p className="font-bold">
                     {abbreviateNumber(following, 1, {
                         symbols: ["", "k", "m", "g", "t", "p", "e"],
@@ -244,6 +256,12 @@ export default function ProfilePage({
 
     return (
         <div className="flex flex-col flex-1" style={{ width: "95%" }}>
+            <ModalBackground show={showFollowers} setShow={setShowFollowers}>
+                <Followers username={username} />
+            </ModalBackground>
+            <ModalBackground show={showFollowing} setShow={setShowFollowing}>
+                <Following username={username} />
+            </ModalBackground>
             <div className="relative flex justify-between w-full">
                 <div className="flex flex-col self-start mt-16 text-white animate-fadeIn">
                     <ProfileImage image={image} />

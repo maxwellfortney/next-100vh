@@ -7,11 +7,31 @@ import styles from "../styles/Home/Home.module.css";
 import Button100VH from "../components/UIKit/Buttons/Button100VH";
 import { useEffect } from "react";
 import { signOut, useSession } from "next-auth/client";
+import { useState } from "react";
+import ProjectIFrame from "../components/Project/ProjectIFrame";
 
 export default function Home() {
     const [session, loading] = useSession();
+    const [projects, setProjects] = useState<Array<any>>([]);
+
+    useEffect(() => {
+        if (!loading) {
+            fetchPopularProject();
+        }
+    }, [loading]);
 
     if (loading) return null;
+
+    async function fetchPopularProject() {
+        const res = await fetch(`/api/projects`);
+
+        if (res.status === 200) {
+            const projectsRes = await res.json();
+            if (projectsRes) {
+                setProjects(projectsRes);
+            }
+        }
+    }
 
     return (
         <div
@@ -62,43 +82,21 @@ export default function Home() {
                     </div>
                 </div>
             </div>
-            <div
-                style={{ scrollSnapAlign: "start" }}
-                className="flex w-full h-screen min-h-screen bg-red-400"
-            >
-                <div
-                    id="testDiv"
-                    className="flex flex-col items-center justify-start w-full h-full text-white bg-gradient-to-r from-pink-300 via-purple-300 to-indigo-400"
-                >
-                    <div className="flex justify-between w-11/12 mt-3">
-                        <div className="flex items-center">
-                            <h1 className="text-5xl font-black">Test Page</h1>
-                        </div>
-                        <div className="flex items-center text-xl font-medium">
-                            <a className="py-4 mr-2 transition-all border-b-2 border-transparent cursor-pointer hover:border-white">
-                                Home
-                            </a>
-                            <a className="py-4 mr-2 transition-all border-b-2 border-transparent cursor-pointer hover:border-white">
-                                About
-                            </a>
-                            <a className="py-4 transition-all border-b-2 border-transparent cursor-pointer hover:border-white">
-                                Contact
-                            </a>
-                        </div>
+            {projects.map((project) => {
+                return (
+                    <div
+                        key={project.title + project.ownerUsername}
+                        style={{ scrollSnapAlign: "start" }}
+                        className="flex w-full h-screen min-h-screen"
+                    >
+                        <ProjectIFrame
+                            html={project.html}
+                            css={project.css}
+                            js={project.js}
+                        />
                     </div>
-                    <div className="flex items-center justify-center flex-1">
-                        <h1 className="text-5xl font-black text-center text-white md:text-6xl lg:text-7xl">
-                            The best test page you have ever seen.
-                        </h1>
-                    </div>
-                </div>
-            </div>
-            <div
-                style={{ scrollSnapAlign: "start" }}
-                className="flex w-full h-screen min-h-screen bg-yellow-400"
-            >
-                a
-            </div>
+                );
+            })}
         </div>
     );
 }
