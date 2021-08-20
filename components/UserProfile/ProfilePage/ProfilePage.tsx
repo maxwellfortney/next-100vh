@@ -257,10 +257,16 @@ export default function ProfilePage({
     return (
         <div className="flex flex-col flex-1" style={{ width: "95%" }}>
             <ModalBackground show={showFollowers} setShow={setShowFollowers}>
-                <Followers username={username} />
+                <Followers
+                    username={username}
+                    setShowFollowers={setShowFollowers}
+                />
             </ModalBackground>
             <ModalBackground show={showFollowing} setShow={setShowFollowing}>
-                <Following username={username} />
+                <Following
+                    username={username}
+                    setShowFollowing={setShowFollowing}
+                />
             </ModalBackground>
             <div className="relative flex justify-between w-full">
                 <div className="flex flex-col self-start mt-16 text-white animate-fadeIn">
