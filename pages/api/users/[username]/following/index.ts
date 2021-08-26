@@ -69,17 +69,17 @@ export default async function handler(
 
     if (user) {
         const following = user.following
-            .slice(
-                parseInt(page as any) * parseInt(perPage as any),
-                parseInt(page as any) * parseInt(perPage as any) +
-                    parseInt(perPage as any)
-            )
             .sort((a, b) => {
                 return (
                     new Date(b.followedAt).getTime() -
                     new Date(a.followedAt).getTime()
                 );
-            });
+            })
+            .slice(
+                parseInt(page as any) * parseInt(perPage as any),
+                parseInt(page as any) * parseInt(perPage as any) +
+                    parseInt(perPage as any)
+            );
 
         if (following) {
             res.status(200).json(JSON.stringify(following, null, 2));

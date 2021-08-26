@@ -60,10 +60,6 @@ function Container100VH({ children }) {
     //     }
     // }, [loading, session]);
 
-    useEffect(() => {
-        console.log(router);
-    }, [router.pathname]);
-
     if (loading) return null;
 
     if (

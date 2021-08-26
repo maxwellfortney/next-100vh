@@ -1,6 +1,6 @@
 /**
  * @swagger
- * /api/users/{username}/followers:
+ * /api/users/{username}/lastOnline:
  *   parameters:
  *     - name: username
  *       in: path
@@ -8,22 +8,11 @@
  *       required: true
  *       schema:
  *         type: string
- *     - name: perPage
- *       in: query
- *       schema:
- *         type: integer
- *         minimum: 1
- *         maximum: 100
- *     - name: page
- *       in: query
- *       schema:
- *         type: integer
- *         minimum: 0
  *   get:
- *     description: Returns the followers of a 100vh user
+ *     description: Returns the date string of when the user was last online
  *     responses:
  *       200:
- *         description: Returns an array of a 100vh user's followers
+ *         description: Returns the date string of when the user was last online
  *       400:
  *         description: Invalid parameters
  *       404:
@@ -69,17 +58,17 @@ export default async function handler(
 
     if (user) {
         const followers = user.followers
+            .slice(
+                parseInt(page as any) * parseInt(perPage as any),
+                parseInt(page as any) * parseInt(perPage as any) +
+                    parseInt(perPage as any)
+            )
             .sort((a, b) => {
                 return (
                     new Date(b.followedAt).getTime() -
                     new Date(a.followedAt).getTime()
                 );
-            })
-            .slice(
-                parseInt(page as any) * parseInt(perPage as any),
-                parseInt(page as any) * parseInt(perPage as any) +
-                    parseInt(perPage as any)
-            );
+            });
 
         if (followers) {
             res.status(200).json(JSON.stringify(followers, null, 2));

@@ -84,6 +84,12 @@ export default function DropdownToggle({ session }) {
                                 </div>
                             </div> */}
                         <DropDownItem
+                            label="messages"
+                            className="mb-2"
+                            isLink={true}
+                            href={`/messages`}
+                        />
+                        <DropDownItem
                             label="profile"
                             className="mb-2"
                             isLink={true}
@@ -98,7 +104,7 @@ export default function DropdownToggle({ session }) {
                         <DropDownItem
                             label="sign out"
                             className="mb-3"
-                            onClick={() => signOut()}
+                            onClick={() => signOut({ callbackUrl: "/" })}
                         />
                     </div>
                 </div>

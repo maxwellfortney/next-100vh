@@ -18,15 +18,39 @@ export default function SelectOrganization() {
 
     async function handleClick() {
         if (!isOpen) {
-            const res = await fetch(
-                "/api/integrations/github/getOrgs/" + session?.accessToken
-            );
+            if (session?.provider === "github") {
+                const res = await fetch(
+                    "/api/integrations/github/getOrgs/" + session?.accessToken
+                );
 
-            if (res.status === 200) {
-                const orgsJson = await res.json();
-                if (orgsJson) {
-                    console.log(orgsJson);
-                    setOrgs(orgsJson);
+                if (res.status === 200) {
+                    const orgsJson = await res.json();
+                    if (orgsJson) {
+                        console.log(orgsJson);
+                        setOrgs(orgsJson);
+                    }
+                }
+            } else if (session?.provider === "gitlab") {
+                const res = await fetch("/api/integrations/gitlab/groups");
+
+                if (res.status === 200) {
+                    const orgsJson = await res.json();
+                    if (orgsJson) {
+                        console.log(orgsJson);
+                        setOrgs(orgsJson);
+                    }
+                }
+            } else if (session?.provider === "bitbucket") {
+                const res = await fetch(
+                    "/api/integrations/bitbucket/user/workspaces"
+                );
+
+                if (res.status === 200) {
+                    const orgsJson = await res.json();
+                    if (orgsJson) {
+                        console.log(orgsJson);
+                        setOrgs(orgsJson);
+                    }
                 }
             }
         }
@@ -120,17 +144,48 @@ export default function SelectOrganization() {
                 )}
                 {orgs.length > 0 &&
                     orgs.map((org) => {
-                        if (org.login !== activeOrg.name) {
-                            return (
-                                <AnOrganization
-                                    key={org.login}
-                                    image={org.avatar_url}
-                                    name={org.login}
-                                    reposUrl={org.repos_url}
-                                    url={org.url}
-                                    setActiveOrg={setActiveOrg}
-                                />
-                            );
+                        if (session?.provider === "github") {
+                            if (org.login !== activeOrg.name) {
+                                return (
+                                    <AnOrganization
+                                        key={org.login}
+                                        image={org.avatar_url}
+                                        name={org.login}
+                                        reposUrl={org.repos_url}
+                                        url={org.url}
+                                        setActiveOrg={setActiveOrg}
+                                    />
+                                );
+                            }
+                        } else if (session?.provider === "gitlab") {
+                            if (org.name !== activeOrg.name) {
+                                return (
+                                    <AnOrganization
+                                        key={org.name}
+                                        image={
+                                            org.avatar_url ||
+                                            "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"
+                                        }
+                                        name={org.name}
+                                        reposUrl={`https://gitlab.com/api/v4/groups/${org.id}/projects`}
+                                        url={org.web_url}
+                                        setActiveOrg={setActiveOrg}
+                                    />
+                                );
+                            }
+                        } else if (session?.provider === "bitbucket") {
+                            if (org.name !== activeOrg.name) {
+                                return (
+                                    <AnOrganization
+                                        key={org.name}
+                                        image={org.links.avatar.href}
+                                        name={org.name}
+                                        reposUrl={org.links.respositories.href}
+                                        url={org.links.html.href}
+                                        setActiveOrg={setActiveOrg}
+                                    />
+                                );
+                            }
                         }
                     })}
                 <div

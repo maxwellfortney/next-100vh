@@ -3,6 +3,7 @@
 import { useSession } from "next-auth/client";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { useSWRInfinite } from "swr";
 import { fetchDoesUserFollow, fetchUserAvatar } from "../../utils/client/users";
 import FollowButton from "./FollowButton";
 
@@ -10,11 +11,22 @@ export default function Followers({ username, setShowFollowing }) {
     const [session] = useSession();
 
     const [loading, setLoading] = useState(true);
-    const [followings, setFollowings] = useState<Array<any>>([]);
+    // const [followings, setFollowings] = useState<Array<any>>([]);
 
-    async function fetchFollowings() {
+    function getKey(pageIndex, previousPageData) {
+        if (previousPageData && !previousPageData.length) return null; // reached the end
+        return `/api/users/${username}/following?page=${pageIndex}&perPage=10`; // SWR key
+    }
+    const { data, size, setSize } = useSWRInfinite(getKey, fetchFollowings);
+
+    useEffect(() => {
+        console.log(data);
+    }, [data]);
+
+    async function fetchFollowings(path) {
+        console.log(path);
         setLoading(true);
-        const res = await fetch(`/api/users/${username}/following`);
+        const res = await fetch(path);
 
         if (res.status === 200) {
             const followingsRes = await res.json();
@@ -32,14 +44,30 @@ export default function Followers({ username, setShowFollowing }) {
                           )
                         : false;
             }
-            setFollowings(followingsRes);
+            // setFollowings(followingsRes);
+            console.log(followingsRes);
+            setLoading(false);
+            return followingsRes;
         }
-        setLoading(false);
     }
 
-    useEffect(() => {
-        fetchFollowings();
-    }, []);
+    async function handleScroll(e) {
+        console.log(
+            (100 * e.target.scrollTop) /
+                (e.target.scrollHeight - e.target.clientHeight)
+        );
+
+        const scrollPercent =
+            (100 * e.target.scrollTop) /
+            (e.target.scrollHeight - e.target.clientHeight);
+
+        if (scrollPercent > 75) {
+            console.log("increased size");
+            setSize(size + 1);
+        }
+
+        // if(e.target.scrollOffset)
+    }
 
     return (
         <div
@@ -67,9 +95,10 @@ export default function Followers({ username, setShowFollowing }) {
             </div>
             <div
                 className="flex flex-col items-center justify-start w-full overflow-y-auto"
+                onScroll={handleScroll}
                 style={{ maxHeight: "440px" }}
             >
-                {loading ? (
+                {!data ? (
                     <svg className="w-6 animate-spin" viewBox="0 0 100 100">
                         <circle
                             fill="none"
@@ -85,50 +114,56 @@ export default function Followers({ username, setShowFollowing }) {
                     </svg>
                 ) : (
                     <>
-                        {followings.map((following, i) => {
-                            return (
-                                <div
-                                    key={following.username}
-                                    className={`flex items-center justify-between w-full ${
-                                        i === followings.length - 1
-                                            ? ""
-                                            : "mb-4"
-                                    }`}
-                                >
-                                    <div className="flex items-center">
-                                        <img
-                                            src={following.image}
-                                            className="mr-2 rounded-full h-7"
-                                        />
-                                        <Link href={`/${following.username}`}>
-                                            <a className="font-semibold transition-colors duration-300 border-b border-transparent hover:border-white">
-                                                <p>{following.username}</p>
-                                            </a>
-                                        </Link>
+                        {data.map((followings, i) => {
+                            return followings.map((following, j) => {
+                                return (
+                                    // eslint-disable-next-line react/jsx-key
+                                    <div
+                                        // key={following.username}
+                                        className={`flex items-center justify-between w-full ${
+                                            i === data.length - 1 &&
+                                            j === followings.length - 1
+                                                ? ""
+                                                : "mb-4"
+                                        }`}
+                                    >
+                                        <div className="flex items-center">
+                                            <img
+                                                src={following.image}
+                                                className="mr-2 rounded-full h-7"
+                                            />
+                                            <Link
+                                                href={`/${following.username}`}
+                                            >
+                                                <a className="font-semibold transition-colors duration-300 border-b border-transparent hover:border-white">
+                                                    <p>{following.username}</p>
+                                                </a>
+                                            </Link>
+                                        </div>
+                                        <div className="flex">
+                                            {session ? (
+                                                <>
+                                                    {session.user.username ==
+                                                    following.username ? (
+                                                        <p className="mr-2 text-sm opacity-70">
+                                                            you
+                                                        </p>
+                                                    ) : (
+                                                        <FollowButton
+                                                            isFollowingProp={
+                                                                following.isFollowing
+                                                            }
+                                                            otherUsername={
+                                                                following.username
+                                                            }
+                                                        />
+                                                    )}
+                                                </>
+                                            ) : null}
+                                        </div>
                                     </div>
-                                    <div className="flex">
-                                        {session ? (
-                                            <>
-                                                {session.user.username ==
-                                                following.username ? (
-                                                    <p className="mr-2 text-sm opacity-70">
-                                                        you
-                                                    </p>
-                                                ) : (
-                                                    <FollowButton
-                                                        isFollowingProp={
-                                                            following.isFollowing
-                                                        }
-                                                        otherUsername={
-                                                            following.username
-                                                        }
-                                                    />
-                                                )}
-                                            </>
-                                        ) : null}
-                                    </div>
-                                </div>
-                            );
+                                );
+                            });
                         })}
                     </>
                 )}

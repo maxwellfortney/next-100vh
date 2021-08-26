@@ -37,6 +37,7 @@ export default NextAuth({
         Providers.GitLab({
             clientId: process.env.GITLAB_CLIENT_ID,
             clientSecret: process.env.GITLAB_CLIENT_SECRET,
+            scope: "api read_api read_user read_repository",
         }),
         {
             id: "bitbucket",
@@ -130,7 +131,11 @@ export default NextAuth({
             }
 
             if (token.accessToken) {
-                session.accessToken = token.accessToken;
+                session.accessToken = token.accessToken as string;
+            }
+
+            if (token.provider) {
+                session.provider = token.provider as string;
             }
 
             return session;
@@ -146,6 +151,10 @@ export default NextAuth({
                 token.accessToken = account?.access_token;
             } else if (account?.accessToken) {
                 token.accessToken = account?.accessToken;
+            }
+
+            if (account?.provider) {
+                token.provider = account?.provider;
             }
 
             // if (user?.email) {

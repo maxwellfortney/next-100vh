@@ -325,6 +325,13 @@ export default function ProfilePage({
                                             ? "messages"
                                             : "message"
                                     }
+                                    isLink={true}
+                                    href={
+                                        (session.user as any).username ==
+                                        username
+                                            ? "/messages"
+                                            : "/messages"
+                                    }
                                     className="px-4 py-4"
                                 />
                             </>

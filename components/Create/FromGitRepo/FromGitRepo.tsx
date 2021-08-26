@@ -17,43 +17,74 @@ export default function FromGitRepo() {
     const [defaultOrg, setDefaultOrg] = useState<any>(null);
     const [activeOrg, setActiveOrg] = useState<any>(null);
 
-    const [repos, setRepos] = useState<any>([]);
+    const [repos, setRepos] = useState<any>(null);
     const [searchString, setSearchString] = useState("");
 
     const { activeDiv, setActiveDiv } = useContext(CreateContext);
 
     async function fetchDefaultOrg() {
-        const res = await fetch(
-            "/api/integrations/github/getUser/" + session?.accessToken
-        );
-
-        console.log(res);
+        const res = await fetch(`/api/integrations/${session?.provider}/user`);
 
         if (res.status === 200) {
             const userJson = await res.json();
             if (userJson) {
                 console.log(userJson);
-                setDefaultOrg({
-                    image: userJson.avatar_url,
-                    name: userJson.login,
-                    reposUrl: userJson.repos_url,
-                    url: userJson.url,
-                    isDefault: true,
-                });
-                setActiveOrg({
-                    image: userJson.avatar_url,
-                    name: userJson.login,
-                    reposUrl: userJson.repos_url,
-                    url: userJson.url,
-                    isDefault: true,
-                });
+
+                if (session?.provider === "github") {
+                    setDefaultOrg({
+                        image: userJson.avatar_url,
+                        name: userJson.login,
+                        reposUrl: userJson.repos_url,
+                        url: userJson.url,
+                        isDefault: true,
+                    });
+                    setActiveOrg({
+                        image: userJson.avatar_url,
+                        name: userJson.login,
+                        reposUrl: userJson.repos_url,
+                        url: userJson.url,
+                        isDefault: true,
+                    });
+                } else if (session?.provider === "bitbucket") {
+                    setDefaultOrg({
+                        image: userJson.links.avatar.href,
+                        name: userJson.display_name,
+                        reposUrl: userJson.links.repositories.href,
+                        url: userJson.links.html,
+                        isDefault: true,
+                    });
+                    setActiveOrg({
+                        image: userJson.links.avatar.href,
+                        name: userJson.display_name,
+                        reposUrl: userJson.links.repositories.href,
+                        url: userJson.links.html,
+                        isDefault: true,
+                    });
+                } else if (session?.provider === "gitlab") {
+                    setDefaultOrg({
+                        image: userJson.avatar_url,
+                        name: userJson.username,
+                        reposUrl: userJson.web_url,
+                        url: userJson.web_url,
+                        isDefault: true,
+                    });
+                    setActiveOrg({
+                        image: userJson.avatar_url,
+                        name: userJson.username,
+                        reposUrl: userJson.web_url,
+                        url: userJson.web_url,
+                        isDefault: true,
+                    });
+                }
             }
         }
     }
 
     useEffect(() => {
         if (session && session?.accessToken) {
-            fetchDefaultOrg();
+            if (!["google", "email"].includes(session.provider as string)) {
+                fetchDefaultOrg();
+            }
         }
     }, [session]);
 
@@ -77,7 +108,7 @@ export default function FromGitRepo() {
                 style={{ minHeight: "450px" }}
             >
                 <h1 className="self-start mb-3 text-2xl font-bold">
-                    import github repo
+                    import {session?.provider} repo
                 </h1>
                 <div className="flex justify-between w-full max-w-full">
                     <SelectOrganization />
