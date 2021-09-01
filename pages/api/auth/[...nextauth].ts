@@ -86,7 +86,7 @@ export default NextAuth({
       },
       clientId:
         process.env.NODE_ENV === "production"
-          ? (process.env.BITBUCKEET_PROD_ID as string)
+          ? (process.env.BITBUCKET_PROD_ID as string)
           : (process.env.BITBUCKET_DEV_ID as string),
       clientSecret:
         process.env.NODE_ENV === "production"
