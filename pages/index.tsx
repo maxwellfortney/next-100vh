@@ -24,6 +24,7 @@ export default function Home() {
 
   async function fetchPopularProject() {
     const res = await fetch(`/api/projects`);
+    console.log("FETCHED :", res.status);
 
     if (res.status === 200) {
       const projectsRes = await res.json();

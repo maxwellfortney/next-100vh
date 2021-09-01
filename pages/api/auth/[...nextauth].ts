@@ -29,14 +29,8 @@ export default NextAuth({
     //     clientSecret: process.env.FACEBOOK_SECRET,
     // }),
     Providers.GitHub({
-      clientId:
-        process.env.NODE_ENV === "production"
-          ? process.env.GITHUB_PROD_ID
-          : process.env.GITHUB_DEV_ID,
-      clientSecret:
-        process.env.NODE_ENV === "production"
-          ? process.env.GITHUB_PROD_SECRET
-          : process.env.GITHUB_DEV_SECRET,
+      clientId: process.env.GITHUB_ID,
+      clientSecret: process.env.GITHUB_SECRET,
       // https://docs.github.com/en/developers/apps/building-oauth-apps/scopes-for-oauth-apps
       scope: "repo,user",
     }),
@@ -84,14 +78,8 @@ export default NextAuth({
           image: profile.links.avatar.href,
         };
       },
-      clientId:
-        process.env.NODE_ENV === "production"
-          ? (process.env.BITBUCKET_PROD_ID as string)
-          : (process.env.BITBUCKET_DEV_ID as string),
-      clientSecret:
-        process.env.NODE_ENV === "production"
-          ? (process.env.BITBUCKET_PROD_SECRET as string)
-          : (process.env.BITBUCKET_DEV_SECRET as string),
+      clientId: process.env.BITBUCKET_ID as string,
+      clientSecret: process.env.BITBUCKET_SECRET as string,
     },
     Providers.Google({
       clientId: process.env.GOOGLE_ID,

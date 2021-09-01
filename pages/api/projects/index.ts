@@ -29,37 +29,37 @@ import { mongooseProjectModel } from "../../../models/Project";
 import { errorMessage } from "../../../utils/server";
 
 export default async function handler(
-    req: NextApiRequest,
-    res: NextApiResponse<any>
+  req: NextApiRequest,
+  res: NextApiResponse<any>
 ) {
-    const { perPage = 35, page = 0, sort } = req.query;
+  const { perPage = 35, page = 0, sort } = req.query;
 
-    console.log(req.query);
+  console.log(req.query);
 
-    if (parseInt(perPage as any) > 100 || parseInt(perPage as any) < 1) {
-        res.status(400).send(
-            "Bad request: perPage can't be greater than 35 or less than 1"
-        );
-        return;
-    }
+  if (parseInt(perPage as any) > 100 || parseInt(perPage as any) < 1) {
+    res
+      .status(400)
+      .send("Bad request: perPage can't be greater than 35 or less than 1");
+    return;
+  }
 
-    if (parseInt(page as any) < 0) {
-        res.status(400).send("Bad request: page can't be below 0");
-    }
+  if (parseInt(page as any) < 0) {
+    res.status(400).send("Bad request: page can't be below 0");
+  }
 
-    const users = await mongooseProjectModel.find({}, "", {
-        limit: parseInt(perPage as any),
-        skip: parseInt(page as any) * parseInt(perPage as any),
-        sort: {
-            likes: -1,
-            views: -1,
-        },
-    });
+  const projects = await mongooseProjectModel.find({}, "", {
+    limit: parseInt(perPage as any),
+    skip: parseInt(page as any) * parseInt(perPage as any),
+    sort: {
+      likes: -1,
+      views: -1,
+    },
+  });
 
-    if (users) {
-        res.status(200).json(JSON.stringify(users, null, 2));
-        return;
-    } else {
-        res.status(404).json(errorMessage("User doesn't exists"));
-    }
+  if (projects) {
+    res.status(200).json(JSON.stringify(projects, null, 2));
+    return;
+  } else {
+    res.status(404).json(errorMessage("Projects doesn't exists"));
+  }
 }
